@@ -1,0 +1,8 @@
+{
+	"name" : "Timed field list",
+	"author" : "Dobility",
+	"version": "1.0.0",
+	"supportedFieldTypes": ["select_multiple"],
+	"hideDefaultRequiredMessage": false,
+	"hideDefaultConstraintMessage": false
+}

@@ -1,0 +1,98 @@
+<!--link rel="stylesheet" type="text/css" href="style.css">
+<script src="script.js" charset="UTF-8" defer></script-->
+<div id="error" style="color:#b50000"></div>
+<table class="label default-question-text-size timer" id="timer-container">
+  <tr>
+    <td style="padding-left:30px;" dir="auto">TIME LEFT: </td>
+    <td id="timerdisp" style="width: 30px;text-align:right"></td>
+    <td id="unitdisp" style="padding-right:30px;padding-left:5px"></td>
+  </tr>
+</table>
+<div id="label" class="label default-question-text-size" dir="auto">{{{LABEL}}}</div>
+
+<!-- If there is an image specified in the media:image column, show it here -->
+{{#MEDIAIMAGE}}
+<img src="{{MEDIAIMAGE}}" />
+{{/MEDIAIMAGE}}
+
+<!-- If there is audio specified in the media:audio column, show it here -->
+{{#MEDIAAUDIO}}
+<audio controls controlsList="nodownload">
+  <source src="{{MEDIAAUDIO}}">
+  Your browser does not support the audio element.
+</audio>
+{{/MEDIAAUDIO}}
+
+<!-- If there is a video specified in the media:video column, show it here -->
+{{#MEDIAVIDEO}}
+<video width="100%" height="*" controls controlsList="nodownload">
+  <source src="{{MEDIAVIDEO}}">
+  Your browser does not support the video tag.
+</video>
+{{/MEDIAVIDEO}}
+
+<div class="hint default-hint-text-size" id="hint" dir="auto">{{{HINT}}}</div>
+
+
+<!-- This will be the top row for the headers -->
+<div class="choice-labels" id="choice-labels">
+  <table>
+    <tr>
+      <td class="fl-label" dir="auto">{{{LABEL}}}</td>
+      {{#CHOICES}}
+      <td class="header" id="choice-{{CHOICE_VALUE}}">
+        {{CHOICE_LABEL}}
+      </td>
+      {{/CHOICES}}
+    </tr>
+  </table>
+</div>
+
+<!-- The will be each actual choice -->
+<div id="rows-container">
+  <div class="list-nolabel" id="list-nolabel">
+    <table class="list-nolabel">
+      <tr>
+        <td class="fl-label" dir="auto">{{{LABEL}}}</td>
+        {{#CHOICES}}
+        <td class="fl-radio" id="choice-{{CHOICE_VALUE}}">
+          <input
+                 type="checkbox"
+                 value="{{CHOICE_VALUE}}"
+                 name="opt"
+                 class="choice-input"
+                 id="{{CHOICE_INDEX}}"
+                 {{#CHOICE_SELECTED}}checked="checked" {{/CHOICE_SELECTED}}
+                 {{#READONLY}}disabled{{/READONLY}} />
+        </td>
+        {{/CHOICES}}
+      </tr>
+    </table>
+  </div>
+</div>
+
+<table id="field-table">
+  <tr>
+    <td class="fl-label" dir="auto">{{{LABEL}}}</td>
+    {{#CHOICES}}
+    <td class="header" id="choice-{{CHOICE_VALUE}}">
+      {{CHOICE_LABEL}}
+    </td>
+    {{/CHOICES}}
+  </tr>
+  <tr class="list-nolabel">
+    <td class="fl-label" dir="auto"></td>
+    {{#CHOICES}}
+    <td class="fl-radio" id="choice-{{CHOICE_VALUE}}">
+      <input
+             type="checkbox"
+             value="{{CHOICE_VALUE}}"
+             name="opt"
+             class="choice-input"
+             id="{{CHOICE_INDEX}}"
+             {{#CHOICE_SELECTED}}checked="checked" {{/CHOICE_SELECTED}}
+             {{#READONLY}}disabled{{/READONLY}} />
+    </td>
+    {{/CHOICES}}
+  </tr>
+</table>
