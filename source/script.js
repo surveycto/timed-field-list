@@ -111,9 +111,6 @@ var allChoices = []
 
 var rowAnswers = []
 
-console.log('Metadata:')
-console.log(prevMetaData)
-
 if (prevMetaData != null) {
   var metaDataArray = prevMetaData.match(new RegExp('[^|]+', 'g'))
 
@@ -228,8 +225,6 @@ for (var l = 0; l < numLabels; l++) { // Populates the table with labels
 
 // Removes the "missed" value as a visible choice
 var passTd = document.querySelectorAll('#choice-' + missed)
-console.log('passTd:')
-console.log(passTd)
 
 for (var r = 0; r <= numLabels; r++) { // There are 1 more "pass" cells than labels due to the header row, so use <= to address that one
   var thisPassTd = passTd[r]
@@ -239,10 +234,6 @@ for (var r = 0; r <= numLabels; r++) { // There are 1 more "pass" cells than lab
 var buttonElements = [[]]
 
 // Assign each row a different <input> tag name attribute, and checkmarks if it has been previously selected
-
-console.log('rowAnswers:')
-console.log(rowAnswers)
-console.log('There are ' + numLabels + ' labels.')
 
 for (var l = 0; l < numLabels; l++) { // Populates the table with labels
   var answers = rowAnswers[l]
@@ -335,13 +326,14 @@ function gatherAnswer () {
       }
     }
     var joinedArray = selectedArray.join(' ')
-    if (joinedArray == null) {
-      currentAnswer += '|' + missed // The question mark means it had not been answered
+    if (joinedArray === '') {
+      currentAnswer += '|' + missed // The question mark means it has not been answered
+      joinedArray = missed
     } else {
       currentAnswer += '|' + joinedArray
     }
   }
-  setAnswer(joinedArray) // Only really helpful in select_one fields
+  setAnswer(joinedArray) // Only stores the first field, but can be helpful for detecting completion
 }
 
 // Save the user's response (update the current answer)
@@ -405,13 +397,9 @@ function establishTimeLeft () { // This checks the current answer and leftover t
 // Makes radio/check buttons unusable if that setting is turned on
 function blockInput () {
   if (block) {
-    if (appearance.indexOf('minimal') !== -1) {
-      selectDropDownContainer.disabled = true // Disable 'minimal' container
-    } else {
-      for (var b = 0; b < numButtons; b++) {
-        allButtons[b].disabled = true
-      } // End FOR
-    } // End ELSE
+    for (var b = 0; b < numButtons; b++) {
+      allButtons[b].disabled = true
+    } // End FOR
   } // End "block" is true
 } // End blockInput
 
