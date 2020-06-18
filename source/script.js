@@ -188,7 +188,7 @@ if (prevMetaData != null) { // If there is already a set answer when the field f
     }
   } // End cannot resume field
 } else { // If not complete yet
-  setAns(missed) // This is so if the respondent leaves the field, then the answer will already be set. Only set if there is no answer yet, as setup in the FOR loop above
+  setAnswer(missed) // This is so if the respondent leaves the field, then the answer will already be set. Only set if there is no answer yet, as setup in the FOR loop above
 }
 
 // End default parameters
@@ -228,8 +228,10 @@ for (var l = 0; l < numLabels; l++) { // Populates the table with labels
 
 // Removes the "missed" value as a visible choice
 var passTd = document.querySelectorAll('#choice-' + missed)
+console.log('passTd:')
+console.log(passTd)
 
-for (var r = 0; r < numLabels; r++) {
+for (var r = 0; r <= numLabels; r++) { // There are 1 more "pass" cells than labels due to the header row, so use <= to address that one
   var thisPassTd = passTd[r]
   thisPassTd.parentElement.removeChild(thisPassTd) // Remove the pass value as a label
 }
@@ -237,6 +239,10 @@ for (var r = 0; r < numLabels; r++) {
 var buttonElements = [[]]
 
 // Assign each row a different <input> tag name attribute, and checkmarks if it has been previously selected
+
+console.log('rowAnswers:')
+console.log(rowAnswers)
+console.log('There are ' + numLabels + ' labels.')
 
 for (var l = 0; l < numLabels; l++) { // Populates the table with labels
   var answers = rowAnswers[l]
@@ -274,11 +280,6 @@ if (fieldType === 'select_one') { // Changes input type
   }
 }
 
-if (fieldType === 'select_one') { // Change to radio buttons if select_one
-  for (var i = 0; i < numButtons; i++) {
-    allButtons[i].type = 'radio'
-  }
-}
 for (var i = 0; i < numButtons; i++) {
   allButtons[i].onchange = function () {
     // remove 'selected' class from a previously selected option (if any)
@@ -307,16 +308,11 @@ if (unit === 'ms') {
   round = 1000
 }
 
+gatherAnswer()
 establishTimeLeft()
 setInterval(timer, 1)
 
 // FUNCTIONS
-
-function setAns (ans) {
-  currentAnswer = ans
-  setAnswer(ans)
-  setMetaData(String(timeLeft) + '|' + ans)
-}
 
 function clearAnswer () {
   var selectedOptions = document.querySelectorAll('input:checked')
@@ -325,29 +321,6 @@ function clearAnswer () {
     var selectedOption = selectedOptions[s]
     selectedOption.checked = false
     selectedOption.parentElement.classList.remove('selected')
-  }
-}
-
-// Removed the containers that are not to be used
-function removeContainer (keep) {
-  if (keep !== 'radio') {
-    radioButtonsContainer.parentElement.removeChild(radioButtonsContainer) // remove the default radio buttons
-  }
-
-  if (keep !== 'minimal') {
-    selectDropDownContainer.parentElement.removeChild(selectDropDownContainer) // remove the select dropdown contrainer
-  }
-
-  if (keep !== 'likert') {
-    likertContainer.parentElement.removeChild(likertContainer) // remove the likert container
-  }
-
-  if (keep !== 'label') {
-    choiceLabelContainer.parentElement.removeChild(choiceLabelContainer)
-  }
-
-  if (keep !== 'nolabel') {
-    listNoLabelContainer.parentElement.removeChild(listNoLabelContainer)
   }
 }
 
@@ -363,22 +336,20 @@ function gatherAnswer () {
     }
     var joinedArray = selectedArray.join(' ')
     if (joinedArray == null) {
-      currentAnswer += '|?' // The question mark means it had not been answered
+      currentAnswer += '|' + missed // The question mark means it had not been answered
     } else {
       currentAnswer += '|' + joinedArray
     }
   }
-  setAns(joinedArray)
+  setAnswer(joinedArray) // Only really helpful in select_one fields
 }
 
 // Save the user's response (update the current answer)
 function change () {
-
   if (nochange) { // If not supposed to change the field after a value has been set, then this blocks the input once the value has been set.
     blockInput()
     complete = true
   }
-
   gatherAnswer()
 }
 
@@ -446,5 +417,5 @@ function blockInput () {
 
 // This is so that if the time runs out when there is an invalid selection, then set to the "missed" value
 function handleConstraintMessage (message) {
-  setAns(missed)
+  setAnswer(missed)
 }
