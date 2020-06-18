@@ -1,3 +1,71 @@
+/* // Put this at the top of your script when testing in a web browser
+class Choice {
+  constructor (value, index, label, selected, image) {
+    this.CHOICE_INDEX = index
+    this.CHOICE_VALUE = String(value)
+    this.CHOICE_LABEL = label
+    if (selected) {
+      this.CHOICE_SELECTED = true
+    } else {
+      this.CHOICE_SELECTED = false
+    }
+    this.CHOICE_IMAGE = image
+  }
+}
+
+var fieldProperties = {
+  CHOICES: [
+    new Choice(1, 0, 'Choice 1'),
+    new Choice(2, 1, 'Choice 2'),
+    new Choice(3, 2, 'Choice 3'),
+    new Choice(-99, 3, 'Pass')
+  ],
+  METADATA: '3000|1 3|1',
+  LABEL: 'This is a label',
+  HINT: 'This is a hint',
+  PARAMETERS: [
+    {
+      key: 'labels',
+      value: 'Row A|Row B'
+    },
+    {
+      key: 'advance',
+      value: 0
+    }
+  ],
+  FIELDTYPE: 'select_multiple',
+  APPEARANCE: '',
+  LANGUAGE: 'english'
+}
+
+function setAnswer (ans) {
+  console.log('Set answer to: ' + ans)
+}
+
+function setMetaData (string) {
+  fieldProperties.METADATA = string
+}
+
+function getMetaData () {
+  return fieldProperties.METADATA
+}
+
+function getPluginParameter (param) {
+  const parameters = fieldProperties.PARAMETERS
+  if (parameters != null) {
+    for (const p of fieldProperties.PARAMETERS) {
+      const key = p.key
+      if (key == param) {
+        return p.value
+      } // End IF
+    } // End FOR
+  } // End IF
+}
+
+function goToNextField () {
+  console.log('Skipped to next field')
+}
+
 /* global fieldProperties, setAnswer, goToNextField, getPluginParameter, getMetaData, setMetaData */
 
 // Start standard field setup
@@ -9,8 +77,8 @@ var numChoices = choices.length
 var labelContainer = document.querySelector('#label')
 var hintContainer = document.querySelector('#hint')
 
-var fieldTable = document.querySelector('#field-table')
-var fieldRowHtml = fieldTable.querySelector('.list-nolabel')
+var fieldTable = document.querySelector('#field-table').querySelector('tbody')
+var fieldRowHtml = fieldTable.querySelector('.list-nolabel').outerHTML
 
 // Start timer fields
 var timerContainer = document.querySelector('#timer-container')
@@ -27,7 +95,8 @@ var autoAdvance = getPluginParameter('advance')
 var block = getPluginParameter('block')
 var nochange = getPluginParameter('nochange')
 var allLabels = getPluginParameter('labels')
-var leftoverTime = parseInt(getMetaData())
+var prevMetaData = getMetaData()
+var leftoverTime
 
 // Time and other vars
 var startTime // This will get an actual value when the timer starts in startStopTimer()
@@ -37,6 +106,20 @@ var timePassed = 0 // Time passed so far
 var complete = false
 var currentAnswer
 var allChoices = []
+
+// var allAnswers = [[]] // This will be a two-dimentional array, where the first dimension is the row number starting at 0, and the second dimension is the choices selected in that row.
+
+var rowAnswers = []
+
+console.log('Metadata:')
+console.log(prevMetaData)
+
+if (prevMetaData != null) {
+  var metaDataArray = prevMetaData.match(new RegExp('[^|]+', 'g'))
+
+  leftoverTime = parseInt(metaDataArray[0])
+  rowAnswers = metaDataArray.slice(1) // A single-dimensional array, where each element is a space-separated list of those answers
+}
 
 // Default parameter values
 // Setup defaults of parameters if they are not defined
@@ -88,7 +171,7 @@ if (nochange === 1) {
   nochange = false
 }
 
-if (checkComplete()) { // If there is already a set answer when the field first appears, then this statement is true
+if (prevMetaData != null) { // If there is already a set answer when the field first appears, then this statement is true
   if (nochange) {
     blockInput()
     complete = true
@@ -105,7 +188,7 @@ if (checkComplete()) { // If there is already a set answer when the field first 
     }
   } // End cannot resume field
 } else { // If not complete yet
-  setAnswer(missed) // This is so if the respondent leaves the field, then the answer will already be set. Only set if there is no answer yet, as setup in the FOR loop above
+  setAns(missed) // This is so if the respondent leaves the field, then the answer will already be set. Only set if there is no answer yet, as setup in the FOR loop above
 }
 
 // End default parameters
@@ -128,28 +211,55 @@ if (fieldProperties.HINT) {
   hintContainer.innerHTML = unEntity(fieldProperties.HINT)
 }
 
-// Removes the "missed" value as a visible choice
-var passTd = document.querySelector('#choice-' + missed)
-passTd.parentElement.removeChild(passTd) // Remove the pass value as a label
-
 // BEGIN CREATING THE ROWS
-var labelArray = allLabels.match(new RegExp('|'))
+var labelArray = allLabels.match(new RegExp('[^|]+', 'g'))
 var numLabels = labelArray.length
 
-for (let l = 1; l < numLabels; l++) { // Starts at 1, since the first one has already been created.
+for (var l = 1; l < numLabels; l++) { // Starts at 1, since the first one has already been created.
   fieldTable.innerHTML += fieldRowHtml
 }
 
 var fieldRows = fieldTable.querySelectorAll('.list-nolabel')
-for (let l = 0; l < numLabels; l++) { // Populates the table with labels
+for (var l = 0; l < numLabels; l++) { // Populates the table with labels
   var fieldRow = fieldRows[l]
   fieldRow.querySelector('.fl-label').innerHTML = labelArray[l]
 }
-
 // END CREATING THE ROWS
 
+// Removes the "missed" value as a visible choice
+var passTd = document.querySelectorAll('#choice-' + missed)
+
+for (var r = 0; r < numLabels; r++) {
+  var thisPassTd = passTd[r]
+  thisPassTd.parentElement.removeChild(thisPassTd) // Remove the pass value as a label
+}
+
+var buttonElements = [[]]
+
+// Assign each row a different <input> tag name attribute, and checkmarks if it has been previously selected
+
+for (var l = 0; l < numLabels; l++) { // Populates the table with labels
+  var answers = rowAnswers[l]
+  var fieldRow = fieldRows[l]
+  var rowButtons = fieldRow.querySelectorAll('input')
+  var numRowButtons = rowButtons.length
+  for (var r = 0; r < numRowButtons; r++) {
+    var rowButton = rowButtons[r]
+    rowButton.name = 'row-' + String(l)
+    if (prevMetaData != null) {
+      var buttonValue = rowButton.value
+      if (answers.indexOf(buttonValue) !== -1) { // IMPORTANT: includes() is not supported in later versions of Android, so this will have to be replaced.
+        rowButton.checked = true
+      } else {
+        rowButton.selected = false
+      }
+    }
+  }
+  buttonElements[l] = rowButtons
+}
+
 // Retrieves the button info now that all of the unneeded ones have been removed
-var allButtons = document.querySelectorAll('input[name="opt"]') // This is declared here so the unneeded boxes have already been removed.
+var allButtons = document.querySelectorAll('input') // This is declared here so the unneeded boxes have already been removed.
 
 // If it set to not resume, and the field has already been accessed before, then this activate blockInput. Doing it now instead of before, since not all of the buttons were available yet.
 if (complete) {
@@ -164,46 +274,21 @@ if (fieldType === 'select_one') { // Changes input type
   }
 }
 
-// minimal appearance
-if ((appearance.indexOf('minimal') !== -1) && (fieldType === 'select_one')) {
-  selectDropDownContainer.onchange = change // when the select dropdown is changed, call the change() function (which will update the current value)
-} else if ((appearance.indexOf('likert') !== -1) && (fieldType === 'select_one')) { // likert appearance
-  var likertButtons = document.querySelectorAll('div[name="opt"]')
-  for (var i = 0; i < likertButtons.length; i++) {
-    likertButtons[i].onclick = function () {
-      if (!complete) {
-        // clear previously selected option (if any)
-        var selectedOption = document.querySelector('.likert-input-button.selected')
-        if (selectedOption) {
-          selectedOption.classList.remove('selected')
-        }
-        this.classList.add('selected') // mark clicked option as selected
-        change.apply({ value: this.getAttribute('data-value') }) // call the change() function and tell it which value was selected
-
-        if (nochange) {
-          complete = true // This is so it knows to dissalow input when an answer is set
-        }
-      }
-    }
-  }
-} else { // all other appearances
-  var buttons = document.querySelectorAll('input[name="opt"]')
-  var numButtons = buttons.length
-  if (fieldType === 'select_one') { // Change to radio buttons if select_one
-    for (var i = 0; i < numButtons; i++) {
-      buttons[i].type = 'radio'
-    }
-  }
+if (fieldType === 'select_one') { // Change to radio buttons if select_one
   for (var i = 0; i < numButtons; i++) {
-    buttons[i].onchange = function () {
-      // remove 'selected' class from a previously selected option (if any)
-      var selectedOption = document.querySelector('.choice-container.selected')
-      if ((selectedOption) && (fieldType === 'select_one')) {
-        selectedOption.classList.remove('selected')
-      }
-      this.parentElement.classList.add('selected') // add 'selected' class to the new selected option
-      change.apply(this) // call the change() function and tell it which value was selected
+    allButtons[i].type = 'radio'
+  }
+}
+for (var i = 0; i < numButtons; i++) {
+  allButtons[i].onchange = function () {
+    // remove 'selected' class from a previously selected option (if any)
+    // var selectedOption = document.querySelector('.choice-container.selected')
+    var selectedOption = this.parentElement.parentElement.querySelector('.selected')
+    if ((selectedOption) && (fieldType === 'select_one')) {
+      selectedOption.classList.remove('selected')
     }
+    this.parentElement.classList.add('selected') // add 'selected' class to the new selected option
+    change.apply(this) // call the change() function and tell it which value was selected
   }
 }
 
@@ -227,32 +312,20 @@ setInterval(timer, 1)
 
 // FUNCTIONS
 
-function clearAnswer () {
-  // minimal appearance
-  if (appearance.indexOf('minimal') !== -1) {
-    selectDropDownContainer.value = ''
-  } else if (appearance.indexOf('likert') !== -1) { // likert appearance
-    var selectedOption = document.querySelector('.likert-input-button.selected')
-    if (selectedOption) {
-      selectedOption.classList.remove('selected')
-    }
-  } else { // all other appearances
-    var selectedOption = document.querySelector('input[name="opt"]:checked')
-    if (selectedOption) {
-      selectedOption.checked = false
-      selectedOption.parentElement.classList.remove('selected')
-    }
-  }
+function setAns (ans) {
+  currentAnswer = ans
+  setAnswer(ans)
+  setMetaData(String(timeLeft) + '|' + ans)
 }
 
-function checkComplete () { // Returns true if any of the choices has a CHOICE_SELECTED value of true. Otherwise, returns false.
-  for (var c = 0; c < numChoices; c++) { // Checks each choice to see if the form has already been completed
-    var choice = choices[c]
-    if (choice.CHOICE_SELECTED) { // If a choice has a value, then that means the field is already complete
-      return true // No need to check anymore if even one choice has been selected
-    } // End going through each choice
+function clearAnswer () {
+  var selectedOptions = document.querySelectorAll('input:checked')
+  var numSelected = selectedOptions.length
+  for (var s = 0; s < numSelected; s++) {
+    var selectedOption = selectedOptions[s]
+    selectedOption.checked = false
+    selectedOption.parentElement.classList.remove('selected')
   }
-  return false
 }
 
 // Removed the containers that are not to be used
@@ -278,30 +351,35 @@ function removeContainer (keep) {
   }
 }
 
-// Save the user's response (update the current answer)
-function change () {
-  if (fieldType === 'select_one') {
-    currentAnswer = this.value
-    setAnswer(currentAnswer)
-    // If the appearance is 'quick', then also progress to the next field
-    if (appearance.indexOf('quick') !== -1) {
-      goToNextField()
-    }
-  } else {
-    var selected = []
-    for (var c = 0; c < numChoices; c++) {
-      if (choiceContainers[c].querySelector('INPUT').checked === true) {
-        selected.push(choices[c].CHOICE_VALUE)
+function gatherAnswer () {
+  currentAnswer = ''
+  for (var r = 0; r < numLabels; r++) {
+    var selectedArray = []
+    for (var c = 0; c < numChoices - 1; c++) {
+      var thisButton = buttonElements[r][c]
+      if (thisButton.checked) {
+        selectedArray.push(thisButton.value)
       }
     }
-    currentAnswer = selected.join(' ')
-    setAnswer(currentAnswer)
+    var joinedArray = selectedArray.join(' ')
+    if (joinedArray == null) {
+      currentAnswer += '|?' // The question mark means it had not been answered
+    } else {
+      currentAnswer += '|' + joinedArray
+    }
   }
+  setAns(joinedArray)
+}
+
+// Save the user's response (update the current answer)
+function change () {
 
   if (nochange) { // If not supposed to change the field after a value has been set, then this blocks the input once the value has been set.
     blockInput()
     complete = true
   }
+
+  gatherAnswer()
 }
 
 // If the field label or hint contain any HTML that isn't in the form definition, then the < and > characters will have been replaced by their HTML character entities, and the HTML won't render. We need to turn those HTML entities back to actual < and > characters so that the HTML renders properly. This will allow you to render HTML from field references in your field label or hint.
@@ -331,16 +409,12 @@ function timer () {
     complete = true
     timeLeft = 0
     // timerDisp.innerHTML = String(Math.ceil(timeLeft / round))
-
-    if ((currentAnswer == null) || (currentAnswer === '') || (Array.isArray(currentAnswer) && (currentAnswer.length === 0))) {
-      setAnswer(missed)
-    }
-    setMetaData(0)
+    setMetaData('0' + currentAnswer)
     if (autoAdvance) {
       goToNextField()
     }
   }
-  setMetaData(timeLeft)
+  setMetaData(String(timeLeft) + currentAnswer)
 
   if (dispTimer) {
     timerDisp.innerHTML = String(Math.ceil(timeLeft / round))
@@ -372,5 +446,5 @@ function blockInput () {
 
 // This is so that if the time runs out when there is an invalid selection, then set to the "missed" value
 function handleConstraintMessage (message) {
-  setAnswer(missed)
+  setAns(missed)
 }
