@@ -6,37 +6,38 @@
     <td id="unitdisp" style="padding-right:30px;padding-left:5px"></td>
   </tr>
 </table>
-<div id="label" class="label default-question-text-size" dir="auto">{{{LABEL}}}</div>
 
-<!-- If there is an image specified in the media:image column, show it here -->
-{{#MEDIAIMAGE}}
-<img src="{{MEDIAIMAGE}}" />
-{{/MEDIAIMAGE}}
+<div class="shift">
+  <!-- If there is an image specified in the media:image column, show it here -->
+  {{#MEDIAIMAGE}}
+  <img src="{{MEDIAIMAGE}}" />
+  {{/MEDIAIMAGE}}
 
-<div class="hint default-hint-text-size" id="hint" dir="auto">{{{HINT}}}</div>
+  <div class="hint default-hint-text-size" id="hint" dir="auto">{{{HINT}}}</div>
 
-<table id="field-table">
-  <tr>
-    <td class="fl-label" dir="auto">{{{LABEL}}}</td>
-    {{#CHOICES}}
-    <td class="header" id="choice-{{CHOICE_VALUE}}">
-      {{CHOICE_LABEL}}
-    </td>
-    {{/CHOICES}}
-  </tr>
-  <tr class="list-nolabel">
-    <td class="fl-label" dir="auto"></td>
-    {{#CHOICES}}
-    <td class="fl-radio" id="choice-{{CHOICE_VALUE}}">
-      <input
-             type="checkbox"
-             value="{{CHOICE_VALUE}}"
-             name="opt"
-             class="choice-input"
-             id="{{CHOICE_INDEX}}"
-             {{#CHOICE_SELECTED}}checked="checked" {{/CHOICE_SELECTED}}
-             {{#READONLY}}disabled{{/READONLY}} />
-    </td>
-    {{/CHOICES}}
-  </tr>
-</table>
+  <table id="field-table">
+    <tr>
+      <td class="fl-label" id="label" dir="auto">{{{LABEL}}}</td>
+      {{#CHOICES}}
+      <td class="header" id="choice-{{CHOICE_VALUE}}">
+        {{CHOICE_LABEL}}
+      </td>
+      {{/CHOICES}}
+    </tr>
+    <tr class="list-nolabel">
+      <td class="fl-label" dir="auto"></td>
+      {{#CHOICES}}
+      <td class="fl-radio" id="choice-{{CHOICE_VALUE}}">
+        <input
+               type="checkbox"
+               value="{{CHOICE_VALUE}}"
+               name="opt"
+               class="choice-input"
+               id="{{CHOICE_INDEX}}"
+               {{#CHOICE_SELECTED}}checked="checked" {{/CHOICE_SELECTED}}
+               {{#READONLY}}disabled{{/READONLY}} />
+      </td>
+      {{/CHOICES}}
+    </tr>
+  </table>
+</div>
