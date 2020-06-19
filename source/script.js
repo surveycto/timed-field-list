@@ -20,13 +20,13 @@ var fieldProperties = {
     new Choice(3, 2, 'Choice 3'),
     new Choice(-99, 3, 'Pass')
   ],
-  METADATA: '3000|1 3|1',
+  METADATA: undefined,
   LABEL: 'This is a label',
   HINT: 'This is a hint',
   PARAMETERS: [
     {
       key: 'labels',
-      value: 'Row A|Row B'
+      value: 'Row A|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B'
     },
     {
       key: 'advance',
@@ -74,11 +74,14 @@ var appearance = fieldProperties.APPEARANCE
 var fieldType = fieldProperties.FIELDTYPE
 var numChoices = choices.length
 
+var htmlBody = document.body // Used in height adjustment
+
 var labelContainer = document.querySelector('#label')
 var hintContainer = document.querySelector('#hint')
 
 var fieldTable = document.querySelector('#field-table').querySelector('tbody')
 var fieldRowHtml = fieldTable.querySelector('.list-nolabel').outerHTML
+var shiftContainer = document.querySelector('.shift')
 
 // Start timer fields
 var timerContainer = document.querySelector('#timer-container')
@@ -300,8 +303,10 @@ if (unit === 'ms') {
 }
 
 gatherAnswer()
+adjustWindow()
 establishTimeLeft()
 setInterval(timer, 1)
+window.onresize = adjustWindow
 
 // FUNCTIONS
 
@@ -402,6 +407,14 @@ function blockInput () {
     } // End FOR
   } // End "block" is true
 } // End blockInput
+
+function adjustWindow () {
+  var shiftPos = shiftContainer.getBoundingClientRect().top
+  var windowHeight = window.screen.height
+  var containerHeight = windowHeight - shiftPos - 150 // May be changed
+
+  shiftContainer.style.height = String(containerHeight) + 'px'
+}
 
 // This is so that if the time runs out when there is an invalid selection, then set to the "missed" value
 function handleConstraintMessage (message) {

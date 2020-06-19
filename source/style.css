@@ -18,9 +18,9 @@
     left: 50%;
     margin-left: auto;
     margin-right: auto;
-    position: fixed;
+    /* position: static;
     top: 0;
-    transform: translateX(-50%);
+    transform: translateX(-50%); */
 }
 
 .timer td{
@@ -28,7 +28,8 @@
 }
 
 .shift {
-    margin-top: 80px;
+    overflow: auto;
+    height: 100px;
 }
 
 .hint {
