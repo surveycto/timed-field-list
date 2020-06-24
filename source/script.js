@@ -436,7 +436,7 @@ function adjustWindow () {
   var frameHeight
   var windowHeight
   if (platform === 'web') {
-    frameHeight = 500
+    frameHeight = 300 // This is an estimation for web collect
     windowHeight = parent.outerHeight
   } else {
     frameHeight = 150 // This is an estimation for mobile devices
@@ -448,7 +448,6 @@ function adjustWindow () {
   var containerHeight = windowHeight - shiftPos - frameHeight + frameAdjust
 
   shiftContainer.style.height = String(containerHeight) + 'px'
-  console.log('Adjusted')
 }
 
 // This is so that if the time runs out when there is an invalid selection, then set to the "missed" value

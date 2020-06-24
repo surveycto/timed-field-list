@@ -29,7 +29,7 @@
 
 .shift {
     overflow: auto;
-    height: 100px;
+    height: 10px;
 }
 
 .hint {
@@ -39,14 +39,20 @@
     font-style: italic;
 }
 
-/* label and list-nolabel appearances */
-div.choice-labels table, div.list-nolabel table {
-    width: 100%
+/* Table formatting */
+#field-table {
+    border-collapse: collapse;
+}
+
+#field-table, #field-table td {
+    border: 1px solid rgb(197, 197, 197);
+}
+
+#field-table td {
+    padding: 11px 4px;
 }
 
 .list-nolabel {
-    border: 1px solid #ddd;
-    padding: 10px 15px;
     text-align: left;
 }
 
