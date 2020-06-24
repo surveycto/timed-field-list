@@ -108,6 +108,7 @@ var block = getPluginParameter('block')
 var nochange = getPluginParameter('nochange')
 var allLabels = getPluginParameter('labels')
 var frameAdjust = getPluginParameter('adjust')
+var numberRows = getPluginParameter('numberrows')
 var prevMetaData = getMetaData()
 var leftoverTime
 
@@ -185,6 +186,12 @@ if (nochange === 1) {
   nochange = false
 }
 
+if (numberRows === 0) {
+  numberRows = false
+} else {
+  numberRows = true
+}
+
 if (isNaN(frameAdjust)) {
   frameAdjust = 0
 }
@@ -240,7 +247,7 @@ for (var l = 1; l < numLabels; l++) { // Starts at 1, since the first one has al
 var fieldRows = fieldTable.querySelectorAll('.list-nolabel')
 for (var l = 0; l < numLabels; l++) { // Populates the table with labels
   var fieldRow = fieldRows[l]
-  fieldRow.querySelector('.fl-label').innerHTML = labelArray[l]
+  fieldRow.querySelector('.fl-label').innerHTML = (numberRows ? String(l + 1) + '. ' : '') + labelArray[l]
 }
 // END CREATING THE ROWS
 
