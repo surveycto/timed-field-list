@@ -22,23 +22,23 @@ If a user attempts to return to a field with this field plug-in that has already
 | Feature / Property | Support |
 | --- | --- |
 | Supported field type(s) | `select_one`, `select_multiple`|
-| Default values | Yes |
+| Default values | No |
 | Custom constraint message | Yes |
 | Custom required message | Yes |
 | Read only | Yes |
 | media:image | Yes |
 | media:audio | Yes |
 | media:video | Yes |
-| `label` appearance | Yes |
-| `list-nolabel` appearance | Yes |
-| `quick` appearance | Yes (`select_one` only) |
-| `minimal` appearance | Yes (`select_one` only) |
+| `label` appearance | No |
+| `list-nolabel` appearance | No |
+| `quick` appearance | No |
+| `minimal` appearance | No |
 | `compact` appearance | No |
 | `compact-#` appearance | No |
 | `quickcompact` appearance | No |
 | `quickcompact-#` appearance | No |
-| `likert` appearance | Yes (`select_one` only) |
-| `likert-min` appearance | Yes* (`select_one` only) |
+| `likert` appearance | No |
+| `likert-min` appearance | No  |
 | `likert-mid` appearance | No |
 
 ## How to use
