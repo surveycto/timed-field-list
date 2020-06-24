@@ -281,11 +281,6 @@ for (var l = 0; l < numLabels; l++) { // Populates the table with labels
 // Retrieves the button info now that all of the unneeded ones have been removed
 var allButtons = document.querySelectorAll('input') // This is declared here so the unneeded boxes have already been removed.
 
-// If it set to not resume, and the field has already been accessed before, then this activate blockInput. Doing it now instead of before, since not all of the buttons were available yet.
-if (complete) {
-  blockInput()
-}
-
 // Changes checkboxes to radio buttons if select_one
 var numButtons = allButtons.length
 if (fieldType === 'select_one') { // Changes input type
