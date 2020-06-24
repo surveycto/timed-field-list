@@ -356,10 +356,17 @@ function gatherAnswer () {
     var selectedArray = []
     for (var c = 0; c < numChoices - 1; c++) {
       var thisButton = buttonElements[r][c]
+      var rowDisabled = false
       if (thisButton.checked) {
         selectedArray.push(thisButton.value)
-      }
-    }
+        if (nochange && (!rowDisabled)) { // If a row can only have a choice selected once ("nochange"), then this is for disabling the row once a choice has been selected
+          rowDisabled = true // This is so if the row has already been disabled, it does not disable the row multiple times
+          for (var d = 0; d < numChoices - 1; d++) {
+            buttonElements[r][d].disabled = true
+          }
+        } // End "nochange" is true
+      } // End button was checked
+    } // End loop through each button in the row
     var joinedArray = selectedArray.join(' ')
     if (joinedArray === '') {
       currentAnswer += '|' + missed // The question mark means it has not been answered
@@ -367,16 +374,12 @@ function gatherAnswer () {
     } else {
       currentAnswer += '|' + joinedArray
     }
-  }
+  } // End loop through each row
   setAnswer(joinedArray) // Only stores the last field, but can be helpful for detecting completion
 }
 
 // Save the user's response (update the current answer)
 function change () {
-  if (nochange) { // If not supposed to change the field after a value has been set, then this blocks the input once the value has been set.
-    blockInput()
-    complete = true
-  }
   gatherAnswer()
 }
 
@@ -435,8 +438,8 @@ function blockInput () {
     for (var b = 0; b < numButtons; b++) {
       allButtons[b].disabled = true
     } // End FOR
-  } // End "block" is true
-} // End blockInput
+  }
+}
 
 function adjustWindow () {
   var frameHeight
