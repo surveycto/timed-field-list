@@ -199,16 +199,9 @@ if (isNaN(frameAdjust)) {
 }
 
 if (prevMetaData != null) { // If there is already a set answer when the field first appears, then this statement is true
-  if (nochange) {
+  if (!resume) { // There is already a set answer, and the field cannot be resumed
+    complete = true
     blockInput()
-    complete = true
-  }
-
-  if (!resume) {
-    complete = true
-    if (block) {
-      blockInput()
-    }
 
     if (autoAdvance) {
       goToNextField()
@@ -329,7 +322,7 @@ if (unit === 'ms') {
   round = 1000
 }
 
-gatherAnswer()
+gatherAnswer() // This sets each answer to the "missed" value in case no choice is selected
 adjustWindow()
 establishTimeLeft()
 setInterval(timer, 1)
@@ -375,7 +368,7 @@ function gatherAnswer () {
       currentAnswer += '|' + joinedArray
     }
   }
-  setAnswer(joinedArray) // Only stores the first field, but can be helpful for detecting completion
+  setAnswer(joinedArray) // Only stores the last field, but can be helpful for detecting completion
 }
 
 // Save the user's response (update the current answer)
