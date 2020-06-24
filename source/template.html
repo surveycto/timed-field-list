@@ -13,12 +13,13 @@
   {{/MEDIAIMAGE}}
 
 <div class="shift">
+  <div id="label" class="label default-question-text-size" dir="auto">{{{LABEL}}}</div>
 
   <div class="hint default-hint-text-size" id="hint" dir="auto">{{{HINT}}}</div>
 
-  <table id="field-table">
+  <table id="field-table" class="label default-question-text-size">
     <tr>
-      <td class="fl-label" id="label" dir="auto">{{{LABEL}}}</td>
+      <td class="fl-label" id="field-header" dir="auto">{{{LABEL}}}</td>
       {{#CHOICES}}
       <td class="header" id="choice-{{CHOICE_VALUE}}">
         {{CHOICE_LABEL}}

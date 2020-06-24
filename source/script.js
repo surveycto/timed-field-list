@@ -33,7 +33,7 @@ var fieldProperties = {
       value: 0
     }
   ],
-  FIELDTYPE: 'select_multiple',
+  FIELDTYPE: 'select_one',
   APPEARANCE: '',
   LANGUAGE: 'english'
 }
@@ -66,11 +66,11 @@ function goToNextField () {
   console.log('Skipped to next field')
 }
 
-/* global fieldProperties, setAnswer, goToNextField, getPluginParameter, getMetaData, setMetaData */
+/* global fieldProperties, setAnswer, goToNextField, getPluginParameter, getMetaData, setMetaData, global */
 
 // Start standard field setup
 var choices = fieldProperties.CHOICES
-var appearance = fieldProperties.APPEARANCE
+// var appearance = fieldProperties.APPEARANCE
 var fieldType = fieldProperties.FIELDTYPE
 var numChoices = choices.length
 
@@ -78,8 +78,16 @@ var htmlBody = document.body // Used in height adjustment
 
 var labelContainer = document.querySelector('#label')
 var hintContainer = document.querySelector('#hint')
+var platform
+
+if (document.body.className.indexOf('web-collect') >= 0) {
+  platform = 'web'
+} else {
+  platform = 'mobile' // Currently, iOS or Android does not matter, but will add the distinction later if needed
+}
 
 var fieldTable = document.querySelector('#field-table').querySelector('tbody')
+var fieldHContainer = document.querySelector('#field-header')
 var fieldRowHtml = fieldTable.querySelector('.list-nolabel').outerHTML
 var shiftContainer = document.querySelector('.shift')
 
@@ -89,6 +97,7 @@ var timerDisp = timerContainer.querySelector('#timerdisp')
 var unitDisp = timerContainer.querySelector('#unitdisp')
 
 // PARAMETERS
+var headerText = getPluginParameter('header')
 var dispTimer = getPluginParameter('disp')
 var timeStart = getPluginParameter('duration')
 var unit = getPluginParameter('unit')
@@ -98,6 +107,7 @@ var autoAdvance = getPluginParameter('advance')
 var block = getPluginParameter('block')
 var nochange = getPluginParameter('nochange')
 var allLabels = getPluginParameter('labels')
+var frameAdjust = getPluginParameter('adjust')
 var prevMetaData = getMetaData()
 var leftoverTime
 
@@ -121,8 +131,12 @@ if (prevMetaData != null) {
   rowAnswers = metaDataArray.slice(1) // A single-dimensional array, where each element is a space-separated list of those answers
 }
 
-// Default parameter values
 // Setup defaults of parameters if they are not defined
+
+if (headerText != null) {
+  fieldHContainer.innerHTML = headerText
+}
+
 if (dispTimer === 0) {
   dispTimer = false
   timerContainer.parentElement.removeChild(timerContainer)
@@ -169,6 +183,10 @@ if (nochange === 1) {
   nochange = true
 } else {
   nochange = false
+}
+
+if (isNaN(frameAdjust)) {
+  frameAdjust = 0
 }
 
 if (prevMetaData != null) { // If there is already a set answer when the field first appears, then this statement is true
@@ -306,7 +324,13 @@ gatherAnswer()
 adjustWindow()
 establishTimeLeft()
 setInterval(timer, 1)
-window.onresize = adjustWindow
+
+if (platform === 'web') {
+  parent.onresize = adjustWindow
+} else {
+  window.onresize = adjustWindow
+}
+
 
 // FUNCTIONS
 
@@ -409,11 +433,22 @@ function blockInput () {
 } // End blockInput
 
 function adjustWindow () {
+  var frameHeight
+  var windowHeight
+  if (platform === 'web') {
+    frameHeight = 500
+    windowHeight = parent.outerHeight
+  } else {
+    frameHeight = 150 // This is an estimation for mobile devices
+    windowHeight = window.screen.height
+  }
+
   var shiftPos = shiftContainer.getBoundingClientRect().top
-  var windowHeight = window.screen.height
-  var containerHeight = windowHeight - shiftPos - 150 // May be changed
+
+  var containerHeight = windowHeight - shiftPos - frameHeight + frameAdjust
 
   shiftContainer.style.height = String(containerHeight) + 'px'
+  console.log('Adjusted')
 }
 
 // This is so that if the time runs out when there is an invalid selection, then set to the "missed" value
