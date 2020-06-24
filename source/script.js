@@ -198,19 +198,6 @@ if (isNaN(frameAdjust)) {
   frameAdjust = 0
 }
 
-if (prevMetaData != null) { // If there is already a set answer when the field first appears, then this statement is true
-  if (!resume) { // There is already a set answer, and the field cannot be resumed
-    complete = true
-    blockInput()
-
-    if (autoAdvance) {
-      goToNextField()
-    }
-  } // End cannot resume field
-} else { // If not complete yet
-  setAnswer(missed) // This is so if the respondent leaves the field, then the answer will already be set. Only set if there is no answer yet, as setup in the FOR loop above
-}
-
 // End default parameters
 
 // Check to make sure "pass" value is a choice value
@@ -281,14 +268,31 @@ for (var l = 0; l < numLabels; l++) { // Populates the table with labels
 // Retrieves the button info now that all of the unneeded ones have been removed
 var allButtons = document.querySelectorAll('input') // This is declared here so the unneeded boxes have already been removed.
 
-// Changes checkboxes to radio buttons if select_one
+// Retrieves the total number of buttons, which is used in a few places
 var numButtons = allButtons.length
+
+// The below IF is for blocking and advancing if applicable when there is already an answer (aka if there is already metadata)
+if (prevMetaData != null) { // If there is already a set answer when the field first appears, then this statement is true
+  if (!resume) { // There is already a set answer, and the field cannot be resumed
+    complete = true
+    blockInput()
+
+    if (autoAdvance) {
+      goToNextField()
+    }
+  } // End cannot resume field
+} else { // If not complete yet
+  setAnswer(missed) // This is so if the respondent leaves the field, then the answer will already be set. Only set if there is no answer yet, as setup in the FOR loop above
+}
+
+// Changes checkboxes to radio buttons if select_one
 if (fieldType === 'select_one') { // Changes input type
   for (var b = 0; b < numButtons; b++) {
     allButtons[b].type = 'radio'
   }
 }
 
+// This is for applying the onchange event listener to the buttons
 for (var i = 0; i < numButtons; i++) {
   allButtons[i].onchange = function () {
     // remove 'selected' class from a previously selected option (if any)
