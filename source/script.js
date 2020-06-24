@@ -327,6 +327,10 @@ setInterval(timer, 1)
 
 if (platform === 'web') {
   parent.onresize = adjustWindow
+  var iframe = parent.document.querySelector('iframe')
+  shiftContainer.onscroll = function () {
+    iframe.offsetHeight = 100 // Fixes an issue where during certain scroll events, the ifram becomes way to long, so this makes it smaller again
+  }
 } else {
   window.onresize = adjustWindow
 }
