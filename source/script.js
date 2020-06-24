@@ -134,6 +134,10 @@ if (prevMetaData != null) {
 
 // Setup defaults of parameters if they are not defined
 
+if (headerText == null) {
+  headerText = ''
+}
+
 fieldHContainer.innerHTML = headerText
 
 if (dispTimer === 0) {
