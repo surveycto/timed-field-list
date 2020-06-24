@@ -369,13 +369,13 @@ function gatherAnswer () {
     }
     var joinedArray = selectedArray.join(' ')
     if (joinedArray === '') {
-      currentAnswer += '|' + missed // The question mark means it has not been answered
+      currentAnswer += '|' + missed // If no value yet, then set to the "missed" value
       joinedArray = missed
     } else {
       currentAnswer += '|' + joinedArray
     }
+    setAnswer(joinedArray) // Each space-separated is set as the answer so it can be checked against the constraint
   }
-  setAnswer(joinedArray) // Only stores the first field, but can be helpful for detecting completion
 }
 
 // Save the user's response (update the current answer)
