@@ -136,6 +136,8 @@ if (prevMetaData != null) {
 
 if (headerText == null) {
   headerText = ''
+} else {
+  headerText = unEntity(headerText)
 }
 
 fieldHContainer.innerHTML = headerText
