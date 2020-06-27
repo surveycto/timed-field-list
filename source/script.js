@@ -31,6 +31,10 @@ var fieldProperties = {
     {
       key: 'advance',
       value: 0
+    },
+    {
+      key: 'header',
+      value: 'This is the header'
     }
   ],
   FIELDTYPE: 'select_one',
@@ -65,16 +69,16 @@ function getPluginParameter (param) {
 function goToNextField () {
   console.log('Skipped to next field')
 }
+document.body.classList.add('web-collect')
+// */
 
-/* global fieldProperties, setAnswer, goToNextField, getPluginParameter, getMetaData, setMetaData, global */
+/* global fieldProperties, setAnswer, goToNextField, getPluginParameter, getMetaData, setMetaData, parent */
 
 // Start standard field setup
 var choices = fieldProperties.CHOICES
 // var appearance = fieldProperties.APPEARANCE
 var fieldType = fieldProperties.FIELDTYPE
 var numChoices = choices.length
-
-var htmlBody = document.body // Used in height adjustment
 
 var labelContainer = document.querySelector('#label')
 var hintContainer = document.querySelector('#hint')
@@ -86,10 +90,11 @@ if (document.body.className.indexOf('web-collect') >= 0) {
   platform = 'mobile' // Currently, iOS or Android does not matter, but will add the distinction later if needed
 }
 
-var fieldTable = document.querySelector('#field-table').querySelector('tbody')
+var fieldTable = document.querySelector('#field-table')// .querySelector('tbody')
+var fieldBody = fieldTable.querySelector('tbody')
 var fieldHContainer = document.querySelector('#field-header')
 var fieldRowHtml = fieldTable.querySelector('.list-nolabel').outerHTML
-var shiftContainer = document.querySelector('.shift')
+var shiftContainer = document.querySelector('tbody')
 
 // Start timer fields
 var timerContainer = document.querySelector('#timer-container')
@@ -225,10 +230,10 @@ var labelArray = allLabels.match(new RegExp('[^|]+', 'g'))
 var numLabels = labelArray.length
 
 for (var l = 1; l < numLabels; l++) { // Starts at 1, since the first one has already been created.
-  fieldTable.innerHTML += fieldRowHtml
+  fieldBody.innerHTML += fieldRowHtml
 }
 
-var fieldRows = fieldTable.querySelectorAll('.list-nolabel')
+var fieldRows = fieldBody.querySelectorAll('.list-nolabel')
 for (var l = 0; l < numLabels; l++) { // Populates the table with labels
   var fieldRow = fieldRows[l]
   fieldRow.querySelector('.fl-label').innerHTML = (numberRows ? String(l + 1) + '. ' : '') + labelArray[l]
@@ -445,6 +450,19 @@ function blockInput () {
 function adjustWindow () {
   var frameHeight
   var windowHeight
+  var tbodyWidth = fieldBody.clientWidth
+  var emptySpace = tbodyWidth - fieldBody.querySelector('tr').offsetWidth
+
+  var tdWidth = fieldBody.querySelector('td').offsetWidth
+  var headerWidth = tdWidth + emptySpace
+  var headerWidthString = String(headerWidth) + 'px'
+  var allLabelContainers = fieldTable.querySelectorAll('.fl-label')
+  var numLabelContainers = allLabelContainers.length
+  for (var r = 0; r < numLabelContainers; r++) {
+    allLabelContainers[r].style.width = headerWidthString
+  }
+  allLabelContainers[0].style.width = String(headerWidth - (allLabelContainers[0].offsetWidth - headerWidth)) + 'px'
+
   if (platform === 'web') {
     frameHeight = 300 // This is an estimation for web collect
     windowHeight = parent.outerHeight
@@ -452,12 +470,11 @@ function adjustWindow () {
     frameHeight = 150 // This is an estimation for mobile devices
     windowHeight = window.screen.height
   }
-
-  var shiftPos = shiftContainer.getBoundingClientRect().top
+  var shiftPos = fieldBody.getBoundingClientRect().top
 
   var containerHeight = windowHeight - shiftPos - frameHeight + frameAdjust
 
-  shiftContainer.style.height = String(containerHeight) + 'px'
+  fieldBody.style.height = String(containerHeight) + 'px'
 }
 
 // This is so that if the time runs out when there is an invalid selection, then set to the "missed" value

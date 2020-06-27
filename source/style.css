@@ -29,6 +29,7 @@
 
 .shift {
     overflow: auto;
+    display: block;
     height: 10px;
 }
 
@@ -39,9 +40,29 @@
     font-style: italic;
 }
 
-/* Table formatting */
+/* TABLE FORMATTING */
+
 #field-table {
     border-collapse: collapse;
+    table-layout:fixed;
+    width: 100%;
+}
+
+#field-table thead {
+    overflow-y:scroll;
+
+}
+
+#field-table tbody {
+    display: block;
+    overflow: auto;
+    height: 200px;
+    width: 100%;
+}
+
+#field-table thead, tbody tr{
+    display: table;
+    table-layout: fixed;
 }
 
 #field-table, #field-table td {
@@ -65,13 +86,10 @@
     text-align: center;
 }
 
+/* END TABLE FORMATTING */
+
 /*
     ------------------------
     Other global styles
     ------------------------
 */
-
-/* hide SVG symbol definitions */
-.symbol {
-    display: none;
-}
