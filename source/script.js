@@ -1,4 +1,4 @@
-/* // Put this at the top of your script when testing in a web browser
+// Put this at the top of your script when testing in a web browser
 class Choice {
   constructor (value, index, label, selected, image) {
     this.CHOICE_INDEX = index
@@ -450,8 +450,8 @@ function blockInput () {
 function adjustWindow () {
   var frameHeight
   var windowHeight
-  var tbodyWidth = fieldBody.clientWidth
-  var emptySpace = tbodyWidth - fieldBody.querySelector('tr').offsetWidth
+  var tbodyWidth = fieldBody.clientWidth // Width of the tbody, not including the scrollbar
+  var emptySpace = tbodyWidth - fieldBody.querySelector('tr').offsetWidth // How much empty space there is within the tbody to start
 
   var tdWidth = fieldBody.querySelector('td').offsetWidth
   var headerWidth = tdWidth + emptySpace
@@ -461,7 +461,7 @@ function adjustWindow () {
   for (var r = 0; r < numLabelContainers; r++) {
     allLabelContainers[r].style.width = headerWidthString
   }
-  allLabelContainers[0].style.width = String(headerWidth - (allLabelContainers[0].offsetWidth - headerWidth)) + 'px'
+  allLabelContainers[0].style.width = String(headerWidth - (allLabelContainers[0].offsetWidth - headerWidth)) + 'px' // The header row becomes too wide, so this shortens it. This is a messy solution for now.
 
   if (platform === 'web') {
     frameHeight = 300 // This is an estimation for web collect
