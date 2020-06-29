@@ -330,6 +330,7 @@ if (unit === 'ms') {
 
 gatherAnswer() // This sets each answer to the "missed" value in case no choice is selected
 adjustWindow()
+adjustHeaderFont()
 establishTimeLeft()
 setInterval(timer, 1)
 
@@ -475,6 +476,18 @@ function adjustWindow () {
   var containerHeight = windowHeight - shiftPos - frameHeight + frameAdjust
 
   fieldBody.style.height = String(containerHeight) + 'px'
+}
+
+function adjustHeaderFont () {
+  var allHeaders = document.querySelectorAll('.header')
+  for (var h = 0; h < numChoices - 1; h++) {
+    var headerCell = allHeaders[h]
+    var fontSize = 1
+    while ((headerCell.scrollWidth > headerCell.clientWidth) && (fontSize > 0.1)) {
+      fontSize -= 0.1
+      headerCell.style.fontSize = String(fontSize) + 'em'
+    }
+  }
 }
 
 // This is so that if the time runs out when there is an invalid selection, then set to the "missed" value
