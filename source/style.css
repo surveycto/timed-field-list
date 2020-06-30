@@ -27,11 +27,6 @@
     vertical-align: middle;
 }
 
-.shift {
-    overflow: auto;
-    display: block;
-    height: 10px;
-}
 
 .hint {
     /* add style rules here to change how the hint appears */
@@ -50,7 +45,6 @@
 
 #field-table thead {
     overflow-y:scroll;
-
 }
 
 #field-table tbody {

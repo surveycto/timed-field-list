@@ -1,4 +1,4 @@
-// Put this at the top of your script when testing in a web browser
+/* // Put this at the top of your script when testing in a web browser
 class Choice {
   constructor (value, index, label, selected, image) {
     this.CHOICE_INDEX = index
@@ -15,9 +15,9 @@ class Choice {
 
 var fieldProperties = {
   CHOICES: [
-    new Choice(1, 0, 'Choice 1'),
-    new Choice(2, 1, 'Choice 2'),
-    new Choice(3, 2, 'Choice 3'),
+    new Choice(1, 0, 'True'),
+    new Choice(2, 1, 'False'),
+    new Choice(3, 2, 'Whatsgoingon'),
     new Choice(-99, 3, 'Pass')
   ],
   METADATA: undefined,
@@ -26,7 +26,7 @@ var fieldProperties = {
   PARAMETERS: [
     {
       key: 'labels',
-      value: 'Row A|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B|Row B'
+      value: 'Birds lay eggs.|Chickens have pencils.|Six is a shape.|A house has a door.|Football is a game.|Men can walk.|We eat paper.|Bees make bread.|Cars have tires.|Ball is a color.|Bees make honey.|A mouse has a door.|We eat food.|Red is a color.|Chickens have feathers.|Boats have tires.|Six is a number.|Desks can walk.|Dogs lay eggs.|Football is a meal.'
     },
     {
       key: 'advance',
@@ -262,7 +262,7 @@ for (var l = 0; l < numLabels; l++) { // Populates the table with labels
     rowButton.name = 'row-' + String(l)
     if (prevMetaData != null) {
       var buttonValue = rowButton.value
-      if (answers.indexOf(buttonValue) !== -1) { // IMPORTANT: includes() is not supported in later versions of Android, so this will have to be replaced.
+      if (answers.indexOf(buttonValue) !== -1) { // If that box had been selected, this checkmarks it
         rowButton.checked = true
       } else {
         rowButton.selected = false
@@ -271,6 +271,9 @@ for (var l = 0; l < numLabels; l++) { // Populates the table with labels
   }
   buttonElements[l] = rowButtons
 }
+
+var allLabelContainers = fieldTable.querySelectorAll('.fl-label') // This is each cell in the left-most column.
+var numLabelContainers = numLabels + 1 // The number of these containers is the total number of labels, plus 1 for the header row
 
 // Retrieves the button info now that all of the unneeded ones have been removed
 var allButtons = document.querySelectorAll('input') // This is declared here so the unneeded boxes have already been removed.
@@ -343,7 +346,6 @@ if (platform === 'web') {
 } else {
   window.onresize = adjustWindow
 }
-
 
 // FUNCTIONS
 
@@ -449,36 +451,36 @@ function blockInput () {
 }
 
 function adjustWindow () {
-  var frameHeight
-  var windowHeight
+  var usedHeight // This will be an estimation of how much height has already been used by the interface
+  var windowHeight // Height of the working area. In web forms, it's the height of the window, otherwise, it's the height of the device.
   var tbodyWidth = fieldBody.clientWidth // Width of the tbody, not including the scrollbar
-  var emptySpace = tbodyWidth - fieldBody.querySelector('tr').offsetWidth // How much empty space there is within the tbody to start
+  var emptySpace = tbodyWidth - fieldBody.querySelector('tr').offsetWidth // How much empty space there is within the tbody to start. Determined so it can be filled in.
 
-  var tdWidth = fieldBody.querySelector('td').offsetWidth
-  var headerWidth = tdWidth + emptySpace
-  var headerWidthString = String(headerWidth) + 'px'
-  var allLabelContainers = fieldTable.querySelectorAll('.fl-label')
-  var numLabelContainers = allLabelContainers.length
+  var tdWidth = fieldBody.querySelector('td').offsetWidth // Width of the first row label td. This will be used to determine the width of all of the cells in that row.
+  var headerWidth = tdWidth + emptySpace // This will be the new width of the label column, to make sure they are all the same.
+  var headerWidthString = String(headerWidth) + 'px' // Adding on 'px', since that is the width unit.
   for (var r = 0; r < numLabelContainers; r++) {
-    allLabelContainers[r].style.width = headerWidthString
+    allLabelContainers[r].style.width = headerWidthString // Each td in the left-most column is set to the same width
   }
-  allLabelContainers[0].style.width = String(headerWidth - (allLabelContainers[0].offsetWidth - headerWidth)) + 'px' // The header row becomes too wide, so this shortens it. This is a messy solution for now.
+
+  var headerClientWidth = allLabelContainers[0].clientWidth // Width of the top-left most td in the table
+  allLabelContainers[0].style.width = String(headerWidth * 2 - headerClientWidth - headerWidth) + 'px' // Shrinks the top-left td a bit so it is more in-line. Not perfect, but better.
 
   if (platform === 'web') {
-    frameHeight = 300 // This is an estimation for web collect
-    windowHeight = parent.outerHeight
+    usedHeight = 300 // This is an estimation for web collect
+    windowHeight = parent.outerHeight // Height of the document of the web page.
   } else {
-    frameHeight = 150 // This is an estimation for mobile devices
-    windowHeight = window.screen.height
+    usedHeight = 150 // This is an estimation for mobile devices
+    windowHeight = window.screen.height // Height of the device.
   }
   var shiftPos = fieldBody.getBoundingClientRect().top
 
-  var containerHeight = windowHeight - shiftPos - frameHeight + frameAdjust
+  var containerHeight = windowHeight - shiftPos - usedHeight + frameAdjust // What the height of the scrolling container should be
 
   fieldBody.style.height = String(containerHeight) + 'px'
 }
 
-function adjustHeaderFont () {
+function adjustHeaderFont () { // If the words in the headers are too long, this shrinks them so they fit better.
   var allHeaders = document.querySelectorAll('.header')
   for (var h = 0; h < numChoices - 1; h++) {
     var headerCell = allHeaders[h]
