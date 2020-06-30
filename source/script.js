@@ -1,4 +1,4 @@
-/* // Put this at the top of your script when testing in a web browser
+// Put this at the top of your script when testing in a web browser
 class Choice {
   constructor (value, index, label, selected, image) {
     this.CHOICE_INDEX = index
@@ -35,9 +35,13 @@ var fieldProperties = {
     {
       key: 'header',
       value: 'This is the header'
+    },
+    {
+      key: 'duration',
+      value: 1000
     }
   ],
-  FIELDTYPE: 'select_one',
+  FIELDTYPE: 'select_multiple',
   APPEARANCE: '',
   LANGUAGE: 'english'
 }
@@ -252,20 +256,30 @@ var buttonElements = [[]]
 
 // Assign each row a different <input> tag name attribute, and checkmarks if it has been previously selected
 
+var numRowButtons = numChoices - 1
 for (var l = 0; l < numLabels; l++) { // Populates the table with labels
   var answers = rowAnswers[l]
   var fieldRow = fieldRows[l]
+  var rowTds = fieldRow.querySelectorAll('td.fl-radio')
   var rowButtons = fieldRow.querySelectorAll('input')
-  var numRowButtons = rowButtons.length
   for (var r = 0; r < numRowButtons; r++) {
-    var rowButton = rowButtons[r]
-    rowButton.name = 'row-' + String(l)
+    var rowTd = rowTds[r]
+    var tdInput = rowTd.querySelector('input')
+    var tdLabel = rowTd.querySelector('label')
+    console.log(r)
+    console.log(rowTd)
+    console.log(tdInput)
+    console.log(tdLabel)
+    var rowName = 'row-' + String(l)
+    var buttonValue = tdInput.value
+    var buttonId = rowName + '-choice-' + String(buttonValue)
+    tdInput.name = rowName
+    tdInput.id = tdLabel.htmlFor = buttonId
     if (prevMetaData != null) {
-      var buttonValue = rowButton.value
       if (answers.indexOf(buttonValue) !== -1) { // If that box had been selected, this checkmarks it
-        rowButton.checked = true
+        tdInput.checked = true
       } else {
-        rowButton.selected = false
+        tdInput.selected = false
       }
     }
   }
