@@ -16,7 +16,17 @@
 
 <div class="hint default-hint-text-size" id="hint" dir="auto">{{{HINT}}}</div>
 
-<table id="field-table" class="label default-question-text-size">
+
+
+
+
+<table id="ft-headers" class="ft-table ft-headers label default-question-text-size">
+  <colgroup>
+    <col>
+    {{#CHOICES}}
+    <col style="width:60px" id="choice-{{CHOICE_VALUE}}">
+    {{/CHOICES}}
+  </colgroup>
   <thead>
     <tr>
       <td class="fl-label" id="field-header" dir="auto"></td>
@@ -27,6 +37,16 @@
       {{/CHOICES}}
     </tr>
   </thead>
+</table>
+
+<div class="scrolling">
+<table id="ft-rows" class="ft-table ft-rows label default-question-text-size">
+  <colgroup>
+    <col>
+    {{#CHOICES}}
+    <col style="width:60px" id="choice-{{CHOICE_VALUE}}">
+    {{/CHOICES}}
+  </colgroup>
   <tbody>
     <tr class="list-nolabel">
       <td class="fl-label" dir="auto"></td>
@@ -45,3 +65,4 @@
     </tr>
   </tbody>
 </table>
+</div>

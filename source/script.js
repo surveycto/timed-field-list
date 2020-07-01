@@ -26,7 +26,7 @@ var fieldProperties = {
   PARAMETERS: [
     {
       key: 'labels',
-      value: 'Birds lay eggs.|Chickens have pencils.|Six is a shape.|A house has a door.|Football is a game.|Men can walk.|We eat paper.|Bees make bread.|Cars have tires.|Ball is a color.|Bees make honey.|A mouse has a door.|We eat food.|Red is a color.|Chickens have feathers.|Boats have tires.|Six is a number.|Desks can walk.|Dogs lay eggs.|Football is a meal.'
+      value: 'Birds lay eggs. And this is even longer.|Chickens have pencils.|Six is a shape.|A house has a door.|Football is a game.|Men can walk.|We eat paper.|Bees make bread.|Cars have tires.|Ball is a color.|Bees make honey.|A mouse has a door.|We eat food.|Red is a color.|Chickens have feathers.|Boats have tires.|Six is a number.|Desks can walk.|Dogs lay eggs.|Football is a meal.'
     },
     {
       key: 'advance',
@@ -94,11 +94,13 @@ if (document.body.className.indexOf('web-collect') >= 0) {
   platform = 'mobile' // Currently, iOS or Android does not matter, but will add the distinction later if needed
 }
 
-var fieldTable = document.querySelector('#field-table')// .querySelector('tbody')
-var fieldBody = fieldTable.querySelector('tbody')
-var fieldHContainer = document.querySelector('#field-header')
-var fieldRowHtml = fieldTable.querySelector('.list-nolabel').outerHTML
-var shiftContainer = document.querySelector('tbody')
+var shiftContainer = document.querySelector('.scrolling')
+var headerTable = document.querySelector('#ft-headers')
+var rowTable = document.querySelector('#ft-rows')
+var rowBody = rowTable.querySelector('tbody')
+
+var fieldHContainer = document.querySelector('#field-header') // Top-left most cell
+var fieldRowHtml = rowTable.querySelector('.list-nolabel').outerHTML // The HTML for each non-header row
 
 // Start timer fields
 var timerContainer = document.querySelector('#timer-container')
@@ -234,22 +236,22 @@ var labelArray = allLabels.match(new RegExp('[^|]+', 'g'))
 var numLabels = labelArray.length
 
 for (var l = 1; l < numLabels; l++) { // Starts at 1, since the first one has already been created.
-  fieldBody.innerHTML += fieldRowHtml
+  rowBody.innerHTML += fieldRowHtml
 }
 
-var fieldRows = fieldBody.querySelectorAll('.list-nolabel')
+var fieldRows = rowBody.querySelectorAll('.list-nolabel')
 for (var l = 0; l < numLabels; l++) { // Populates the table with labels
   var fieldRow = fieldRows[l]
   fieldRow.querySelector('.fl-label').innerHTML = (numberRows ? String(l + 1) + '. ' : '') + labelArray[l]
 }
 // END CREATING THE ROWS
 
-// Removes the "missed" value as a visible choice
-var passTd = document.querySelectorAll('#choice-' + missed)
-
-for (var r = 0; r <= numLabels; r++) { // There are 1 more "pass" cells than labels due to the header row, so use <= to address that one
-  var thisPassTd = passTd[r]
-  thisPassTd.parentElement.removeChild(thisPassTd) // Remove the pass value as a label
+// Removes the "missed" values as a visible choice
+var passTags = document.querySelectorAll('#choice-' + missed)
+var numTdRemove = passTags.length
+for (var r = 0; r < numTdRemove; r++) {
+  var thisPassTag = passTags[r]
+  thisPassTag.parentElement.removeChild(thisPassTag) // Remove the pass value as a label
 }
 
 var buttonElements = [[]]
@@ -266,10 +268,6 @@ for (var l = 0; l < numLabels; l++) { // Populates the table with labels
     var rowTd = rowTds[r]
     var tdInput = rowTd.querySelector('input')
     var tdLabel = rowTd.querySelector('label')
-    console.log(r)
-    console.log(rowTd)
-    console.log(tdInput)
-    console.log(tdLabel)
     var rowName = 'row-' + String(l)
     var buttonValue = tdInput.value
     var buttonId = rowName + '-choice-' + String(buttonValue)
@@ -286,7 +284,7 @@ for (var l = 0; l < numLabels; l++) { // Populates the table with labels
   buttonElements[l] = rowButtons
 }
 
-var allLabelContainers = fieldTable.querySelectorAll('.fl-label') // This is each cell in the left-most column.
+var allLabelContainers = rowBody.querySelectorAll('.fl-label') // This is each cell in the left-most column.
 var numLabelContainers = numLabels + 1 // The number of these containers is the total number of labels, plus 1 for the header row
 
 // Retrieves the button info now that all of the unneeded ones have been removed
@@ -345,21 +343,26 @@ if (unit === 'ms') {
   round = 1000
 }
 
-gatherAnswer() // This sets each answer to the "missed" value in case no choice is selected
-adjustWindow()
-adjustHeaderFont()
-establishTimeLeft()
-setInterval(timer, 1)
-
 if (platform === 'web') {
   parent.onresize = adjustWindow
-  var iframe = parent.document.querySelector('iframe')
-  shiftContainer.onscroll = function () {
-    iframe.offsetHeight = 100 // Fixes an issue where during certain scroll events, the ifram becomes way to long, so this makes it smaller again
+  try {
+    var iframe = parent.document.querySelector('iframe')
+    shiftContainer.onscroll = function () {
+      iframe.offsetHeight = 100 // Fixes an issue where during certain scroll events, the ifram becomes way to long, so this makes it smaller again
+    }
+  } catch (e) {
+    Error(e)
   }
 } else {
   window.onresize = adjustWindow
 }
+
+gatherAnswer() // This sets each answer to the "missed" value in case no choice is selected
+establishTimeLeft()
+
+adjustWindow()
+adjustWindow() // Running it twice at first helps ensure everything aligns properly
+setInterval(timer, 1)
 
 // FUNCTIONS
 
@@ -465,33 +468,26 @@ function blockInput () {
 }
 
 function adjustWindow () {
+  // labelContainer.innerHTML += '|'
   var usedHeight // This will be an estimation of how much height has already been used by the interface
   var windowHeight // Height of the working area. In web forms, it's the height of the window, otherwise, it's the height of the device.
-  var tbodyWidth = fieldBody.clientWidth // Width of the tbody, not including the scrollbar
-  var emptySpace = tbodyWidth - fieldBody.querySelector('tr').offsetWidth // How much empty space there is within the tbody to start. Determined so it can be filled in.
-
-  var tdWidth = fieldBody.querySelector('td').offsetWidth // Width of the first row label td. This will be used to determine the width of all of the cells in that row.
-  var headerWidth = tdWidth + emptySpace // This will be the new width of the label column, to make sure they are all the same.
-  var headerWidthString = String(headerWidth) + 'px' // Adding on 'px', since that is the width unit.
-  for (var r = 0; r < numLabelContainers; r++) {
-    allLabelContainers[r].style.width = headerWidthString // Each td in the left-most column is set to the same width
-  }
-
-  var headerClientWidth = allLabelContainers[0].clientWidth // Width of the top-left most td in the table
-  allLabelContainers[0].style.width = String(headerWidth * 2 - headerClientWidth - headerWidth) + 'px' // Shrinks the top-left td a bit so it is more in-line. Not perfect, but better.
 
   if (platform === 'web') {
     usedHeight = 300 // This is an estimation for web collect
     windowHeight = parent.outerHeight // Height of the document of the web page.
   } else {
-    usedHeight = 150 // This is an estimation for mobile devices
+    usedHeight = 175 // This is an estimation for mobile devices
     windowHeight = window.screen.height // Height of the device.
   }
-  var shiftPos = fieldBody.getBoundingClientRect().top
+  var shiftPos = rowBody.getBoundingClientRect().top
 
   var containerHeight = windowHeight - shiftPos - usedHeight + frameAdjust // What the height of the scrolling container should be
 
-  fieldBody.style.height = String(containerHeight) + 'px'
+  shiftContainer.style.height = String(containerHeight) + 'px'
+
+  var rowTableWidth = rowTable.clientWidth
+  headerTable.style.width = String(rowTableWidth) + 'px'
+  adjustHeaderFont()
 }
 
 function adjustHeaderFont () { // If the words in the headers are too long, this shrinks them so they fit better.

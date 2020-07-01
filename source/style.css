@@ -37,33 +37,38 @@
 
 /* TABLE FORMATTING */
 
-#field-table {
+.scrolling {
+    display: block;
+    height: 400px;
+    overflow-y:scroll;
+    margin-top: 0;
+}
+
+.ft-headers {
+    margin-bottom: 0;
+}
+
+.ft-rows {
+    margin-top: 0;
+}
+
+.ft-table {
+    display: table;
     border-collapse: collapse;
     table-layout:fixed;
     width: 100%;
 }
 
-#field-table thead {
+.ft-table thead {
     overflow-y:scroll;
 }
 
-#field-table tbody {
-    display: block;
-    overflow: auto;
-    height: 200px;
-    width: 100%;
-}
 
-#field-table thead, tbody tr{
-    display: table;
-    table-layout: fixed;
-}
-
-#field-table, #field-table td {
+.ft-table, .ft-table td {
     border: 1px solid rgb(197, 197, 197);
 }
 
-#field-table td {
+.ft-table td {
     padding: 11px 4px;
 }
 
@@ -86,8 +91,8 @@
 /* CUSTOM RADIO BUTTONS */
 
 :root {
-    --outer-circle-radius: 19px;
-    --inner-circle-radius: 12px;
+    --outer-circle-radius: 17px;
+    --inner-circle-radius: 13px;
     --checkbox-radius: 19px;
     --check-size: 44px;
 }
@@ -117,7 +122,7 @@
     position: absolute;
     width: calc(var(--outer-circle-radius)*2);
     height: calc(var(--outer-circle-radius)*2);
-    top: calc(var(--outer-circle-radius)*-1 - 1px);
+    top: calc(var(--outer-circle-radius)*-1 - 7px);
     left: calc(var(--outer-circle-radius)*-1 - 1px);
     border-radius: 100%; /*Makes the radio button a cirlce instead of a square*/
     background: #fff; /*Background color of the radio button*/
@@ -141,7 +146,7 @@
     background: #047cc2; /*Color of the inner circle*/
     width: calc(var(--inner-circle-radius)*2);
     height: calc(var(--inner-circle-radius)*2);
-    top: calc(var(--inner-circle-radius)*-1); /*Offset so it can be centered in the outer circle*/
+    top: calc(var(--inner-circle-radius)*-1 - 6px); /*Offset so it can be centered in the outer circle*/
     left: calc(var(--inner-circle-radius)*-1); /*Offset so it can be centered in the outer circle*/
     border-radius: 100%;
     /* -webkit-transition: all 0.1s ease; Small animation when check disappears */
@@ -189,7 +194,7 @@
     position: absolute;
     width: calc(var(--checkbox-radius)*2);
     height: calc(var(--checkbox-radius)*2);
-    top: calc(var(--checkbox-radius)*-1 - 1px); /*Offset so it can be centered in the outer circle*/
+    top: calc(var(--checkbox-radius)*-1 - 7px); /*Offset so it can be centered in the outer circle*/
     left: calc(var(--checkbox-radius)*-1 - 1px); /*Offset so it can be centered in the outer circle*/
     border-radius: 15%; /*Makes the checkbox button a cirlce instead of a square*/
     background: #fff; /*Background color of the checkbox button*/
@@ -212,10 +217,11 @@
     font-size: calc(var(--check-size)); /*Size of the checkmark*/
     /* size: calc(var(--check-size)); */
     font-weight: bold;
+    font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;
     color: #047cc2; /*Color of the inner circle*/
     position: absolute;
-    top: calc(var(--inner-circle-radius)*-0.5); /*Offset so it can be centered in the outer circle*/
-    left: calc(var(--inner-circle-radius)*-1.6); /*Offset so it can be centered in the outer circle*/
+    top: calc(var(--inner-circle-radius)*-0.5 - 6px); /*Offset so it can be centered in the outer circle*/
+    left: calc(var(--inner-circle-radius)*-1.6 + 2px); /*Offset so it can be centered in the outer circle*/
     border-radius: 100%;
     /* -webkit-transition: all 0.1s ease; Small animation when check disappears */
     /* transition: all 0.1s ease; Small animation when check disappears */
