@@ -44,6 +44,10 @@
     margin-top: 0;
 }
 
+col.radio-col {
+    width: 60px;
+}
+
 .ft-headers {
     margin-bottom: 0;
 }
