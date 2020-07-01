@@ -1,4 +1,4 @@
-// Put this at the top of your script when testing in a web browser
+/* // Put this at the top of your script when testing in a web browser
 class Choice {
   constructor (value, index, label, selected, image) {
     this.CHOICE_INDEX = index
@@ -76,7 +76,7 @@ function goToNextField () {
 document.body.classList.add('web-collect')
 // */
 
-/* global fieldProperties, setAnswer, goToNextField, getPluginParameter, getMetaData, setMetaData, parent */
+/* global fieldProperties, setAnswer, goToNextField, getPluginParameter, getMetaData, setMetaData, parent, ResizeSensor */
 
 // Start standard field setup
 var choices = fieldProperties.CHOICES
@@ -361,8 +361,9 @@ gatherAnswer() // This sets each answer to the "missed" value in case no choice 
 establishTimeLeft()
 
 adjustWindow()
-adjustWindow() // Running it twice at first helps ensure everything aligns properly
 setInterval(timer, 1)
+
+ResizeSensor(rowTable, adjustWindow) // Adjust whenever the size of the rowTable changes
 
 // FUNCTIONS
 
@@ -476,7 +477,7 @@ function adjustWindow () {
     usedHeight = 300 // This is an estimation for web collect
     windowHeight = parent.outerHeight // Height of the document of the web page.
   } else {
-    usedHeight = 175 // This is an estimation for mobile devices
+    usedHeight = 125 // This is an estimation for mobile devices
     windowHeight = window.screen.height // Height of the device.
   }
   var shiftPos = rowBody.getBoundingClientRect().top
@@ -485,9 +486,11 @@ function adjustWindow () {
 
   shiftContainer.style.height = String(containerHeight) + 'px'
 
-  var rowTableWidth = rowTable.clientWidth
-  headerTable.style.width = String(rowTableWidth) + 'px'
   adjustHeaderFont()
+  var rowTableWidth = rowTable.clientWidth
+  console.log('Width of row table:', rowTableWidth)
+  headerTable.style.width = String(rowTableWidth) + 'px'
+  console.log('Header table width:', headerTable.style.width)
 }
 
 function adjustHeaderFont () { // If the words in the headers are too long, this shrinks them so they fit better.
