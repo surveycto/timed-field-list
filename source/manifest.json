@@ -3,6 +3,7 @@
 	"author" : "Dobility",
 	"version": "1.0.0",
 	"supportedFieldTypes": ["select_one", "select_multiple"],
+	"externalJs": ["ResizeSensor.js"],
 	"hideDefaultRequiredMessage": false,
 	"hideDefaultConstraintMessage": false
 }
