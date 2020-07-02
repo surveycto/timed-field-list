@@ -84,7 +84,7 @@ col.radio-col {
 
 /* END TABLE FORMATTING */
 
-/* CUSTOM RADIO BUTTONS */
+/* CUSTOM RADIO/CHECKBOX BUTTONS */
 
 :root {
     --outer-circle-radius: 17px; /* Outer circle of radio button */
@@ -92,7 +92,6 @@ col.radio-col {
     --checkbox-radius: 19px; /* Size of checkbox */
     --check-size: 44px; /* Size of checkmark */
 }
-
 
 [type="radio"], [type="checkbox"] {
     left: -9999px; /* Hides the standard button */
@@ -170,7 +169,6 @@ col.radio-col {
     top: calc(var(--inner-circle-radius)*-0.5 - 6px); /*Offset so it can be centered in the outer circle*/
 }
 
-
 /* Makes SELECTED DISAPPEAR */
 [type="radio"]:not(:checked) + label:after, [type="checkbox"]:not(:checked) + label:after {
     opacity: 0;
@@ -185,7 +183,3 @@ col.radio-col {
     /* -webkit-transition: all 0.1s ease; /* Small animation when check disappears */
     /* transition: all 0.1s ease; /* Small animation when check disappears */
 }
-
-/* CUSTOM CHECKBOXES */
-
-/*Label of the checkbox button*/
