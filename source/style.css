@@ -93,16 +93,13 @@ col.radio-col {
     --check-size: 44px; /* Size of checkmark */
 }
 
-[type="radio"]:checked,
-[type="radio"]:not(:checked) {
+[type="radio"], [type="checkbox"] {
     left: -9999px;
     position: absolute; /*Hides the standard button*/
 }
 
 /*Label of the radio button*/
-[type="radio"]:checked + label,
-[type="radio"]:not(:checked) + label
-{
+[type="radio"] + label, [type="checkbox"] + label {
     color: #000000; /*Color of font*/
     cursor: pointer; /*Turns the cursor into a hand when hovering*/
     /*line-height: 20px;*/ /*Line height to make sure the lines are not too close*/
@@ -111,54 +108,82 @@ col.radio-col {
     /* padding-left: 22px; */ /*Distant the label is from the center of the radio button*/
 }
 
-/*Outer circle of the radio button*/
-[type="radio"]:checked + label:before,
-[type="radio"]:not(:checked) + label:before{
+[type="checkbox"] + label {
+    line-height: 20px; /*Line height to make sure the lines are not too close*/
+}
+
+[type="radio"] + label:before, [type="checkbox"] + label:before {
     background: #fff; /*Background color of the radio button*/
-    border-radius: 100%; /*Makes the radio button a cirlce instead of a square*/
     content: '';
     position: absolute;
+}
+
+/*Outer circle of the radio button*/
+[type="radio"] + label:before {
+    border-radius: 100%; /*Makes the radio button a cirlce instead of a square*/
     width: calc(var(--outer-circle-radius)*2);
     height: calc(var(--outer-circle-radius)*2);
     left: calc(var(--outer-circle-radius)*-1 - 1px);
     top: calc(var(--outer-circle-radius)*-1 - 7px);
 }
 
+/*Outer circle of the checkbox button*/
+[type="checkbox"] + label:before {
+    border-radius: 15%; /* Makes the checkbox button more circular */
+    width: calc(var(--checkbox-radius)*2);
+    height: calc(var(--checkbox-radius)*2);
+    left: calc(var(--checkbox-radius)*-1 - 1px); /*Offset so it can be centered in the outer circle*/
+    top: calc(var(--checkbox-radius)*-1 - 7px); /*Offset so it can be centered in the outer circle*/
+}
+
 /*Outer circle of the CHECKED radio button*/
-[type="radio"]:checked + label:before {
+[type="radio"]:checked + label:before, [type="checkbox"]:checked + label:before {
     border: 1px solid #047cc2; /*Color of the border of the radio button*/
 }
 
-/*Outer circle of the UNCHECKED radio button*/
-[type="radio"]:not(:checked) + label:before {
+/*Outer circle of the UNCHECKED radio/checkbox button*/
+[type="radio"]:not(:checked) + label:before, [type="checkbox"]:not(:checked) + label:before {
     border: 1px solid #ddd; /*Color of the border of the radio button*/
 }
 
-/*Inner cicle of the radio button*/
-[type="radio"]:checked + label:after,
-[type="radio"]:not(:checked) + label:after {
-    background: #047cc2; /*Color of the inner circle*/
+[type="radio"]:checked + label:after, [type="checkbox"]:checked + label:after {
     border-radius: 100%;
-    content: '';
     position: absolute;
-    width: calc(var(--inner-circle-radius)*2);
-    height: calc(var(--inner-circle-radius)*2);
-    left: calc(var(--inner-circle-radius)*-1); /*Offset so it can be centered in the outer circle*/
-    top: calc(var(--inner-circle-radius)*-1 - 6px); /*Offset so it can be centered in the outer circle*/
     /* -webkit-transition: all 0.1s ease; Small animation when check disappears */
     /* transition: all 0.1s ease; Small animation when check disappears */
 }
 
+/*Inner cicle of the radio button*/
+[type="radio"]:checked + label:after {
+    background: #047cc2; /*Color of the inner circle*/
+    content: '';
+    width: calc(var(--inner-circle-radius)*2);
+    height: calc(var(--inner-circle-radius)*2);
+    left: calc(var(--inner-circle-radius)*-1); /*Offset so it can be centered in the outer circle*/
+    top: calc(var(--inner-circle-radius)*-1 - 6px); /*Offset so it can be centered in the outer circle*/
+}
 
-/*Makes check appear*/
-[type="radio"]:not(:checked) + label:after {
+/* Checkmark in checkbox button*/
+[type="checkbox"]:checked + label:after {
+    color: #047cc2;
+    content: '\2713';
+    font-size: calc(var(--check-size)); /*Size of the checkmark*/
+    font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;
+    font-weight: bold;
+    left: calc(var(--inner-circle-radius)*-1.6 + 2px); /*Offset so it can be centered in the outer circle*/
+    top: calc(var(--inner-circle-radius)*-0.5 - 6px); /*Offset so it can be centered in the outer circle*/
+}
+
+
+/*Makes radio fill appear*/
+[type="radio"]:not(:checked) + label:after, [type="checkbox"]:not(:checked) + label:after {
     opacity: 0;
     /* -webkit-transform: scale(0); Small animation when check appears*/
     /* transform: scale(0); Small animation when check appears*/
 }
 
 /*Makes check disappear*/
-[type="radio"]:checked + label:after {
+[type="radio"]:checked + label:after, [type="checkbox"]:checked + label:after {
     opacity: 1;
     /* -webkit-transform: scale(1); Small animation when check disappears*/
     /* transform: scale(1); Small animation when check disappears*/
@@ -166,73 +191,4 @@ col.radio-col {
 
 /* CUSTOM CHECKBOXES */
 
-[type="checkbox"]:checked,
-[type="checkbox"]:not(:checked) {
-    left: -9999px;
-    position: absolute; /*Hides the standard button*/
-}
-
 /*Label of the checkbox button*/
-[type="checkbox"]:checked + label,
-[type="checkbox"]:not(:checked) + label
-{
-    color: #000000; /*Color of font*/
-    cursor: pointer; /*Turns the cursor into a hand when hovering*/
-    display: inline-block; /*Lines up checkbox button with label*/
-    line-height: 20px; /*Line height to make sure the lines are not too close*/
-    position: relative; /*Keeps checkbox button in correct location*/
-}
-
-/*Outer circle of the checkbox button*/
-[type="checkbox"]:checked + label:before,
-[type="checkbox"]:not(:checked) + label:before{
-    background: #fff; /*Background color of the checkbox button*/
-    border-radius: 15%; /*Makes the checkbox button a cirlce instead of a square*/
-    content: '';
-    position: absolute;
-    width: calc(var(--checkbox-radius)*2);
-    height: calc(var(--checkbox-radius)*2);
-    left: calc(var(--checkbox-radius)*-1 - 1px); /*Offset so it can be centered in the outer circle*/
-    top: calc(var(--checkbox-radius)*-1 - 7px); /*Offset so it can be centered in the outer circle*/
-}
-
-/*Outer circle of the CHECKED checkbox button*/
-[type="checkbox"]:checked + label:before {
-    border: 1px solid #047cc2;; /*Color of the border of the checkbox button*/
-}
-
-/*Outer circle of the UNCHECKED checkbox button*/
-[type="checkbox"]:not(:checked) + label:before {
-    border: 1px solid #ddd; /*Color of the border of the checkbox button*/
-}
-
-/*Inner cicle of the checkbox button*/
-[type="checkbox"]:checked + label:after,
-[type="checkbox"]:not(:checked) + label:after {
-    border-radius: 100%;
-    color: #047cc2; /*Color of the inner circle*/
-    content: '\2713';
-    font-size: calc(var(--check-size)); /*Size of the checkmark*/
-    font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;
-    font-weight: bold;
-    position: absolute;
-    left: calc(var(--inner-circle-radius)*-1.6 + 2px); /*Offset so it can be centered in the outer circle*/
-    top: calc(var(--inner-circle-radius)*-0.5 - 6px); /*Offset so it can be centered in the outer circle*/
-    /* -webkit-transition: all 0.1s ease; Small animation when check disappears */
-    /* transition: all 0.1s ease; Small animation when check disappears */
-}
-
-
-/*Makes check appear*/
-[type="checkbox"]:not(:checked) + label:after {
-    opacity: 0;
-    /* -webkit-transform: scale(0); Small animation when check appears*/
-    /* transform: scale(0); Small animation when check appears*/
-}
-
-/*Makes check disappear*/
-[type="checkbox"]:checked + label:after {
-    opacity: 1;
-    /* -webkit-transform: scale(1); Small animation when check disappears*/
-    /* transform: scale(1); Small animation when check disappears*/
-}
