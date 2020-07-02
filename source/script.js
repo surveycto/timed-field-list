@@ -242,7 +242,7 @@ for (var l = 1; l < numLabels; l++) { // Starts at 1, since the first one has al
 var fieldRows = rowBody.querySelectorAll('.list-nolabel')
 for (var l = 0; l < numLabels; l++) { // Populates the table with labels
   var fieldRow = fieldRows[l]
-  fieldRow.querySelector('.fl-label').innerHTML = (numberRows ? String(l + 1) + '. ' : '') + labelArray[l]
+  fieldRow.querySelector('.fl-label').innerHTML = (numberRows ? String(l + 1) + '. ' : '') + labelArray[l] // Adds the label, and numbers it if applicable
 }
 // END CREATING THE ROWS
 
@@ -267,14 +267,14 @@ for (var l = 0; l < numLabels; l++) { // Populates the table with labels
   for (var r = 0; r < numRowButtons; r++) {
     var rowTd = rowTds[r]
     var tdInput = rowTd.querySelector('input')
-    var tdLabel = rowTd.querySelector('label')
+    var tdLabel = rowTd.querySelector('label') // The label in empty, and just used for creating new buttons
     var rowName = 'row-' + String(l)
     var buttonValue = tdInput.value
     var buttonId = rowName + '-choice-' + String(buttonValue)
     tdInput.name = rowName
     tdInput.id = tdLabel.htmlFor = buttonId
     if (prevMetaData != null) {
-      if (answers.indexOf(buttonValue) !== -1) { // If that box had been selected, this checkmarks it
+      if (answers.indexOf(buttonValue) !== -1) { // If that box had been selected previously, this checkmarks it
         tdInput.checked = true
       } else {
         tdInput.selected = false
@@ -283,9 +283,6 @@ for (var l = 0; l < numLabels; l++) { // Populates the table with labels
   }
   buttonElements[l] = rowButtons
 }
-
-var allLabelContainers = rowBody.querySelectorAll('.fl-label') // This is each cell in the left-most column.
-var numLabelContainers = numLabels + 1 // The number of these containers is the total number of labels, plus 1 for the header row
 
 // Retrieves the button info now that all of the unneeded ones have been removed
 var allButtons = document.querySelectorAll('input') // This is declared here so the unneeded boxes have already been removed.
@@ -314,7 +311,7 @@ if (fieldType === 'select_one') { // Changes input type
   }
 }
 
-// This is for applying the onchange event listener to the buttons
+// This is for applying the onchange event listener to each button
 for (var i = 0; i < numButtons; i++) {
   allButtons[i].onchange = function () {
     // remove 'selected' class from a previously selected option (if any)
@@ -387,7 +384,7 @@ function gatherAnswer () {
       if (thisButton.checked) {
         selectedArray.push(thisButton.value)
         if (nochange && (!rowDisabled)) { // If a row can only have a choice selected once ("nochange"), then this is for disabling the row once a choice has been selected
-          rowDisabled = true // This is so if the row has already been disabled, it does not disable the row multiple times
+          rowDisabled = true // This is so if the row has already been disabled, it does not disable the row multiple times. It's just a bit of a time saver.
           for (var d = 0; d < numChoices - 1; d++) {
             buttonElements[r][d].disabled = true
           }
@@ -497,15 +494,10 @@ function adjustHeaderFont () { // If the words in the headers are too long, this
   var allHeaders = document.querySelectorAll('.header')
   for (var h = 0; h < numChoices - 1; h++) {
     var headerCell = allHeaders[h]
-    var fontSize = 1
+    var fontSize = 1 // Start at the default, then get smaller as needed
     while ((headerCell.scrollWidth > headerCell.clientWidth) && (fontSize > 0.1)) {
       fontSize -= 0.1
       headerCell.style.fontSize = String(fontSize) + 'em'
     }
   }
-}
-
-// This is so that if the time runs out when there is an invalid selection, then set to the "missed" value
-function handleConstraintMessage (message) {
-  setAnswer(missed)
 }
