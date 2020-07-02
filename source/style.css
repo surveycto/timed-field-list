@@ -98,11 +98,19 @@ col.radio-col {
     position: absolute; 
 }
 
-/* Label of the radio button (unused here, since labels have no content) */
+/* Adjustments to button */
 [type="radio"] + label, [type="checkbox"] + label {
     color: #000000; /*Color of font*/
-    cursor: pointer; /*Turns the cursor into a hand when hovering*/
-    /*line-height: 20px;*/ /*Line height to make sure the lines are not too close*/
+    cursor: pointer; /* Turns the cursor into a hand when hovering */
+    display: inline-block; /*Lines up radio button with label*/
+    position: relative; /*Keeps radio button in correct location*/
+    /* padding-left: 22px; */ /*Distant the label is from the center of the radio button*/
+}
+
+/* Adjustments to disabled button */
+[type="radio"]:disabled + label, [type="checkbox"]:disabled + label {
+    color: #000000; /*Color of font*/
+    cursor: default;
     display: inline-block; /*Lines up radio button with label*/
     position: relative; /*Keeps radio button in correct location*/
     /* padding-left: 22px; */ /*Distant the label is from the center of the radio button*/
@@ -117,6 +125,11 @@ col.radio-col {
     background: #fff; /*Background color of the radio button*/
     content: '';
     position: absolute;
+}
+
+/* Disabled button background */
+[type="radio"]:disabled + label:before, [type="checkbox"]:disabled + label:before {
+    background: #dddddd; /*Background color of the radio button*/
 }
 
 /* Border of RADIO */
@@ -137,14 +150,24 @@ col.radio-col {
     top: calc(var(--checkbox-radius)*-1 - 7px); /*Offset so it can be centered in the outer circle*/
 }
 
-/* Outer border of SELECTED button*/
+/* Outer border of SELECTED button */
 [type="radio"]:checked + label:before, [type="checkbox"]:checked + label:before {
     border: 1px solid #047cc2; /*Color of the border of the radio button*/
+}
+
+/* Outer border of disabled SELECTED button */
+[type="radio"]:checked:disabled + label:before, [type="checkbox"]:checked:disabled + label:before {
+    border: 1px solid #63727a; /*Color of the border of the radio button*/
 }
 
 /* Outer border of NOT selected button */
 [type="radio"]:not(:checked) + label:before, [type="checkbox"]:not(:checked) + label:before {
     border: 1px solid #ddd; /*Color of the border of the radio button*/
+}
+
+/* Outer border of NOT selected button */
+[type="radio"]:not(:checked):disabled + label:before, [type="checkbox"]:not(:checked):disabled + label:before {
+    border: 1px solid #c3c3c3; /*Color of the border of the radio button*/
 }
 
 /*Inner cicle of SELECTED RADIO button*/
@@ -158,6 +181,11 @@ col.radio-col {
     top: calc(var(--inner-circle-radius)*-1 - 6px); /*Offset so it can be centered in the outer circle*/
 }
 
+/* Disabled selected radio */
+[type="radio"]:checked:disabled + label:after {
+    background: #63727a; /*Color of the inner circle*/
+}
+
 /* Checkmark of SELECTED CHECKMARK */
 [type="checkbox"]:checked + label:after {
     color: #047cc2;
@@ -167,6 +195,11 @@ col.radio-col {
     font-weight: bold;
     left: calc(var(--inner-circle-radius)*-1.6 + 2px); /*Offset so it can be centered in the outer circle*/
     top: calc(var(--inner-circle-radius)*-0.5 - 6px); /*Offset so it can be centered in the outer circle*/
+}
+
+/* Disabled selected checkmark */
+[type="checkbox"]:checked:disabled + label:after {
+    color: #63727a; /*Color of the inner circle*/
 }
 
 /* Makes SELECTED DISAPPEAR */
