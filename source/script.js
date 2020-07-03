@@ -26,11 +26,11 @@ var fieldProperties = {
   PARAMETERS: [
     {
       key: 'labels',
-      value: 'Birds lay eggs. And this is even longer.|Chickens have pencils.|Six is a shape.|A house has a door.|Football is a game.|Men can walk.|We eat paper.|Bees make bread.|Cars have tires.|Ball is a color.|Bees make honey.|A mouse has a door.|We eat food.|Red is a color.|Chickens have feathers.|Boats have tires.|Six is a number.|Desks can walk.|Dogs lay eggs.|Football is a meal.'
+      value: 'Birds lay eggs. And this is even longer.|Chickens have pencils.|Six is a shape.'
     },
     {
       key: 'advance',
-      value: 0
+      value: 1
     },
     {
       key: 'header',
@@ -38,7 +38,15 @@ var fieldProperties = {
     },
     {
       key: 'duration',
-      value: 10
+      value: 5
+    },
+    {
+      key: 'mustcomplete',
+      value: 1
+    },
+    {
+      key: 'nochange',
+      value: 0
     }
   ],
   FIELDTYPE: 'select_one',
@@ -120,6 +128,7 @@ var nochange = getPluginParameter('nochange')
 var allLabels = getPluginParameter('labels')
 var frameAdjust = getPluginParameter('adjust')
 var numberRows = getPluginParameter('numberrows')
+var mustComplete = getPluginParameter('mustcomplete')
 var prevMetaData = getMetaData()
 var leftoverTime
 
@@ -207,6 +216,12 @@ if (numberRows === 0) {
   numberRows = true
 }
 
+if (mustComplete === 1) {
+  mustComplete = true
+} else {
+  mustComplete = false
+}
+
 if (isNaN(frameAdjust)) {
   frameAdjust = 0
 }
@@ -292,16 +307,22 @@ var numButtons = allButtons.length
 
 // The below IF is for blocking and advancing if applicable when there is already an answer (aka if there is already metadata)
 if (prevMetaData != null) { // If there is already a set answer when the field first appears, then this statement is true
-  if (!resume) { // There is already a set answer, and the field cannot be resumed
-    complete = true
-    blockInput()
+  if ((!mustComplete) || (prevMetaData.indexOf(missed) === -1)) { // This IF is because if all rows must be completed, and not all rows have been completed (meaning the "pass" value would be present), then nothing should be blocked or auto-advanced
+    console.log(mustComplete)
+    console.log(prevMetaData.indexOf(missed))
+    if (!resume) { // There is already a set answer, and the field cannot be resumed
+      complete = true
+      blockInput()
 
-    if (autoAdvance) {
-      goToNextField()
-    }
-  } // End cannot resume field
+      if (autoAdvance) {
+        goToNextField()
+      }
+    } // End cannot resume field
+  }
 } else { // If not complete yet
-  setAnswer(missed) // This is so if the respondent leaves the field, then the answer will already be set. Only set if there is no answer yet, as setup in the FOR loop above
+  if (!mustComplete) {
+    setAnswer(missed) // This is so if the respondent leaves the field, then the answer will already be set. Only set if there is no answer yet, as setup in the FOR loop above
+  }
 }
 
 // Changes checkboxes to radio buttons if select_one
@@ -399,7 +420,16 @@ function gatherAnswer () {
       currentAnswer += '|' + joinedArray
     }
   } // End loop through each row
-  setAnswer(joinedArray) // Only stores the last field, but can be helpful for detecting completion
+  if ((!mustComplete) || (currentAnswer.indexOf(missed) === -1)) { // If mustComplete is false, or there are no "missed" values (meaning each row has a value), then an answer can be set, meaning the field is complete
+    setAnswer(joinedArray) // Only stores the last field, but can be helpful for detecting completion
+    if ((timeLeft === 0) && mustComplete) { // If time has run out, and the last field has been answered, then may be ready to block the input
+      blockInput()
+
+      if (autoAdvance) {
+        goToNextField()
+      }
+    } // End check for mustComplete if time has run out
+  } // End setting answer IF
 }
 
 // Save the user's response (update the current answer)
@@ -430,13 +460,17 @@ function timer () {
   }
 
   if (timeLeft < 0) { // Timer ended
-    blockInput()
     complete = true
     timeLeft = 0
     // timerDisp.innerHTML = String(Math.ceil(timeLeft / round))
     setMetaData('0' + currentAnswer)
-    if (autoAdvance) {
-      goToNextField()
+    if ((!mustComplete) || (currentAnswer.indexOf(missed) === -1)) {
+      console.log(mustComplete)
+      console.log(currentAnswer.indexOf(missed))
+      blockInput()
+      if (autoAdvance) {
+        goToNextField()
+      }
     }
   }
   setMetaData(String(timeLeft) + currentAnswer)
@@ -485,9 +519,7 @@ function adjustWindow () {
 
   adjustHeaderFont()
   var rowTableWidth = rowTable.clientWidth
-  console.log('Width of row table:', rowTableWidth)
   headerTable.style.width = String(rowTableWidth) + 'px'
-  console.log('Header table width:', headerTable.style.width)
 }
 
 function adjustHeaderFont () { // If the words in the headers are too long, this shrinks them so they fit better.
