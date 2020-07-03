@@ -38,10 +38,10 @@ var fieldProperties = {
     },
     {
       key: 'duration',
-      value: 1000
+      value: 10
     }
   ],
-  FIELDTYPE: 'select_multiple',
+  FIELDTYPE: 'select_one',
   APPEARANCE: '',
   LANGUAGE: 'english'
 }
@@ -474,7 +474,7 @@ function adjustWindow () {
     usedHeight = 300 // This is an estimation for web collect
     windowHeight = parent.outerHeight // Height of the document of the web page.
   } else {
-    usedHeight = 125 // This is an estimation for mobile devices
+    usedHeight = 150 // This is an estimation for mobile devices
     windowHeight = window.screen.height // Height of the device.
   }
   var shiftPos = rowBody.getBoundingClientRect().top
