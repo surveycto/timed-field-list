@@ -198,10 +198,10 @@ if (block === 0) {
   block = true
 }
 
-if (resume === 1) {
-  resume = true
-} else {
+if (resume === 0) {
   resume = false
+} else {
+  resume = true
 }
 
 if (nochange === 1) {
