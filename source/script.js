@@ -147,8 +147,18 @@ var rowAnswers = []
 
 if (prevMetaData != null) {
   var metaDataArray = prevMetaData.match(new RegExp('[^|]+', 'g'))
+  var timeArray = metaDataArray[0].match(new RegExp('[^ ]+', 'g'))
+  var lastTimeLeft = parseInt(timeArray[0])
+  var lastTimeNow = parseInt(timeArray[1])
+  var timeWhileGone = Date.now() - lastTimeNow // This is how much time has passed since the respondent left the field and returned
 
-  leftoverTime = parseInt(metaDataArray[0])
+  leftoverTime = lastTimeLeft - timeWhileGone // This is how much time should be remaining on the timer. It takes how much was previously remaining, and subtracts the amount of time that has passed since the respondent was last at this field. This way, the respondent cannot leave the field and come back to extend their time and cheat.
+
+  if (leftoverTime < 0) {
+    complete = true
+    leftoverTime = 0
+  }
+
   rowAnswers = metaDataArray.slice(1) // A single-dimensional array, where each element is a space-separated list of those answers
 }
 
@@ -485,7 +495,7 @@ function establishTimeLeft () { // This checks the current answer and leftover t
     startTime = Date.now()
     timeLeft = timeStart
   } else {
-    timeLeft = parseInt(leftoverTime)
+    timeLeft = leftoverTime
     startTime = Date.now() - (timeStart - timeLeft)
   }
 } // End establishTimeLeft
