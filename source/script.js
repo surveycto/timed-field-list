@@ -49,7 +49,7 @@ var fieldProperties = {
       value: 0
     }
   ],
-  FIELDTYPE: 'select_one',
+  FIELDTYPE: 'select_multiple',
   APPEARANCE: '',
   LANGUAGE: 'english'
 }
@@ -329,10 +329,6 @@ if (prevMetaData != null) { // If there is already a set answer when the field f
       }
     } // End cannot resume field
   }
-} else { // If not complete yet
-  if (!mustComplete) {
-    setAnswer(missed) // This is so if the respondent leaves the field, then the answer will already be set. Only set if there is no answer yet, as setup in the FOR loop above
-  }
 }
 
 // Changes checkboxes to radio buttons if select_one
@@ -431,7 +427,7 @@ function gatherAnswer () {
     }
   } // End loop through each row
   if ((!mustComplete) || (currentAnswer.indexOf(missed) === -1)) { // If mustComplete is false, or there are no "missed" values (meaning each row has a value), then an answer can be set, meaning the field is complete
-    setAnswer(joinedArray) // Only stores the last field, but can be helpful for detecting completion
+    setAnswer(timeLeft) // Only stores value when either all fields have been answered, or when time runs out. That way, when the field is required, they cannot accidentally swipe forward.
     if ((timeLeft === 0) && mustComplete) { // If time has run out, and the last field has been answered, then may be ready to block the input
       blockInput()
 
@@ -464,26 +460,24 @@ function isRTL (s) {
 // TIME FUNCTIONS
 
 function timer () {
+  var timeNow = Date.now()
   if (!complete) {
-    timePassed = Date.now() - startTime
+    timePassed = timeNow - startTime
     timeLeft = timeStart - timePassed
   }
 
   if (timeLeft < 0) { // Timer ended
     complete = true
     timeLeft = 0
-    // timerDisp.innerHTML = String(Math.ceil(timeLeft / round))
-    setMetaData('0' + currentAnswer)
-    if ((!mustComplete) || (currentAnswer.indexOf(missed) === -1)) {
-      console.log(mustComplete)
-      console.log(currentAnswer.indexOf(missed))
+    if ((!mustComplete) || (currentAnswer.indexOf(missed) === -1)) { // This is true if not every row has to be completed, or if every row has to be completed, but all are completed
       blockInput()
       if (autoAdvance) {
         goToNextField()
       }
-    }
-  }
-  setMetaData(String(timeLeft) + currentAnswer)
+      setAnswer('0')
+    } // End setup block and advance
+  } // End timer ran out
+  setMetaData(String(timeLeft) + ' ' + String(timeNow) + currentAnswer)
 
   if (dispTimer) {
     timerDisp.innerHTML = String(Math.ceil(timeLeft / round))
