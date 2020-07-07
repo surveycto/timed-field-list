@@ -189,7 +189,7 @@ col.radio-col {
 /* Checkmark of SELECTED CHECKMARK */
 [type="checkbox"]:checked + label:after {
     color: #047cc2;
-    content: '\2713';
+    content: url(checkmark.png);
     font-size: calc(var(--check-size)); /*Size of the checkmark*/
     font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;
     font-weight: bold;
