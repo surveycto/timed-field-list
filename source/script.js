@@ -16,11 +16,11 @@ class Choice {
 var fieldProperties = {
   CHOICES: [
     new Choice(1, 0, 'True'),
-    new Choice(2, 1, 'False'),
-    new Choice(3, 2, 'Whatsgoingon'),
+    new Choice(0, 1, 'False'),
+    new Choice(-1, 2, 'Whatsgoingon'),
     new Choice(-99, 3, 'Pass')
   ],
-  METADATA: undefined,
+  METADATA: '0 1594227977225|1|0|-1',
   LABEL: 'This is a label',
   HINT: 'This is a hint',
   PARAMETERS: [
@@ -41,7 +41,7 @@ var fieldProperties = {
       value: 5
     },
     {
-      key: 'allRequired',
+      key: 'required',
       value: 1
     },
     {
@@ -49,7 +49,7 @@ var fieldProperties = {
       value: 0
     }
   ],
-  FIELDTYPE: 'select_multiple',
+  FIELDTYPE: 'select_one',
   APPEARANCE: '',
   LANGUAGE: 'english'
 }
@@ -145,8 +145,6 @@ var allChoices = []
 
 var rowAnswers = []
 
-console.log('Previous metadata:')
-console.log(prevMetaData)
 if (prevMetaData != null) {
   var metaDataArray = prevMetaData.match(new RegExp('[^|]+', 'g'))
   var timeArray = metaDataArray[0].match(new RegExp('[^ ]+', 'g'))
@@ -286,16 +284,16 @@ var buttonElements = [[]]
 // Assign each row a different <input> tag name attribute, and checkmarks if it has been previously selected
 
 var numRowButtons = numChoices - 1
-for (var l = 0; l < numLabels; l++) { // Populates the table with labels
+for (var l = 0; l < numLabels; l++) { // Populates the table with the buttons
   var answers = rowAnswers[l]
   var fieldRow = fieldRows[l]
   var rowTds = fieldRow.querySelectorAll('td.fl-radio')
   var rowButtons = fieldRow.querySelectorAll('input')
+  var rowName = 'row-' + String(l)
   for (var r = 0; r < numRowButtons; r++) {
     var rowTd = rowTds[r]
     var tdInput = rowTd.querySelector('input')
-    var tdLabel = rowTd.querySelector('label') // The label in empty, and just used for creating new buttons
-    var rowName = 'row-' + String(l)
+    var tdLabel = rowTd.querySelector('label') // The label is empty, and just used for creating new buttons
     var buttonValue = tdInput.value
     var buttonId = rowName + '-choice-' + String(buttonValue)
     tdInput.name = rowName
@@ -304,7 +302,7 @@ for (var l = 0; l < numLabels; l++) { // Populates the table with labels
       if (answers.indexOf(buttonValue) !== -1) { // If that box had been selected previously, this checkmarks it
         tdInput.checked = true
       } else {
-        tdInput.selected = false
+        tdInput.checked = false
       }
     }
   }
