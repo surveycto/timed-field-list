@@ -1,89 +1,3 @@
-/* // Put this at the top of your script when testing in a web browser
-class Choice {
-  constructor (value, index, label, selected, image) {
-    this.CHOICE_INDEX = index
-    this.CHOICE_VALUE = String(value)
-    this.CHOICE_LABEL = label
-    if (selected) {
-      this.CHOICE_SELECTED = true
-    } else {
-      this.CHOICE_SELECTED = false
-    }
-    this.CHOICE_IMAGE = image
-  }
-}
-
-var fieldProperties = {
-  CHOICES: [
-    new Choice(1, 0, 'True'),
-    new Choice(0, 1, 'False'),
-    new Choice(-1, 2, 'Whatsgoingon'),
-    new Choice(-99, 3, 'Pass')
-  ],
-  METADATA: '0 1594227977225|1|0|-1',
-  LABEL: 'This is a label',
-  HINT: 'This is a hint',
-  PARAMETERS: [
-    {
-      key: 'labels',
-      value: 'Birds lay eggs. And this is even longer.|Chickens have pencils.|Six is a shape.'
-    },
-    {
-      key: 'advance',
-      value: 1
-    },
-    {
-      key: 'header',
-      value: 'This is the header'
-    },
-    {
-      key: 'duration',
-      value: 5
-    },
-    {
-      key: 'required',
-      value: 1
-    },
-    {
-      key: 'nochange',
-      value: 0
-    }
-  ],
-  FIELDTYPE: 'select_one',
-  APPEARANCE: '',
-  LANGUAGE: 'english'
-}
-
-function setAnswer (ans) {
-  console.log('Set answer to: ' + ans)
-}
-
-function setMetaData (string) {
-  fieldProperties.METADATA = string
-}
-
-function getMetaData () {
-  return fieldProperties.METADATA
-}
-
-function getPluginParameter (param) {
-  const parameters = fieldProperties.PARAMETERS
-  if (parameters != null) {
-    for (const p of fieldProperties.PARAMETERS) {
-      const key = p.key
-      if (key == param) {
-        return p.value
-      } // End IF
-    } // End FOR
-  } // End IF
-}
-
-function goToNextField () {
-  console.log('Skipped to next field')
-}
-document.body.classList.add('web-collect')
-// */
-
 /* global fieldProperties, setAnswer, goToNextField, getPluginParameter, getMetaData, setMetaData, parent, ResizeSensor */
 
 // Start standard field setup
@@ -307,10 +221,10 @@ for (var r = 0; r < numTdRemove; r++) {
 
 var numRowButtons = numChoices - 1
 for (var l = 0; l < numLabels; l++) { // Populates the table with the buttons
-  var answers = rowAnswers[l]
-  var fieldRow = fieldRows[l]
-  var rowTds = fieldRow.querySelectorAll('td.fl-radio')
-  var rowButtons = fieldRow.querySelectorAll('input')
+  var answers = rowAnswers[l] // Selected choices in that row
+  var fieldRow = fieldRows[l] // TR element
+  var rowTds = fieldRow.querySelectorAll('td.fl-radio') // TDs with buttons
+  var rowButtons = fieldRow.querySelectorAll('input') // Actual buttons in the TDs
   var rowName = 'row-' + String(l)
   for (var r = 0; r < numRowButtons; r++) {
     var rowTd = rowTds[r]
@@ -319,20 +233,20 @@ for (var l = 0; l < numLabels; l++) { // Populates the table with the buttons
     var buttonValue = tdInput.value
     var buttonId = rowName + '-choice-' + String(buttonValue)
     tdInput.name = rowName
-    tdInput.id = tdLabel.htmlFor = buttonId
+    tdInput.id = tdLabel.htmlFor = buttonId // The LABEL's "for" attribute has to be the same as the INPUT's "id" attribute
     if (prevMetaData != null) {
-      if (answers.indexOf(buttonValue) !== -1) { // If that box had been selected previously, this checkmarks it
+      if (answers.indexOf(buttonValue) !== -1) { // If that box had been selected previously, this selects it
         tdInput.checked = true
       } else {
         tdInput.checked = false
       }
     }
   }
-  buttonElements[l] = rowButtons
+  buttonElements[l] = rowButtons // Stores INPUT elements for gathering the answer later to see which ones have been selected
 }
 
 // Retrieves the button info now that all of the unneeded ones have been removed
-var allButtons = document.querySelectorAll('input') // This is declared here so the unneeded boxes have already been removed.
+var allButtons = document.querySelectorAll('input') // This is declared here so the unneeded boxes have already been removed, and the new boxes have been created
 
 // Retrieves the total number of buttons, which is used in a few places
 var numButtons = allButtons.length
@@ -378,10 +292,10 @@ if (platform === 'web') {
   try {
     var iframe = parent.document.querySelector('iframe')
     shiftContainer.onscroll = function () {
-      iframe.offsetHeight = 100 // Fixes an issue where during certain scroll events, the ifram becomes way to long, so this makes it smaller again
+      iframe.offsetHeight = 100 // Fixes an issue where during certain scroll events, the iframe becomes way to long, so this makes it smaller again
     }
   } catch (e) {
-    Error(e)
+    Error(e) // Not a big deal if there is an error, since this is just a basic aethetic thing, so the respondent can continue even if there is an error here.
   }
 } else {
   window.onresize = adjustWindow
@@ -432,7 +346,7 @@ function gatherAnswer () {
       currentAnswer += '|' + joinedArray
     }
   } // End loop through each row
-  if ((timeLeft === 0) && ((!allRequired) || (currentAnswer.indexOf(missed) === -1))) { // If allRequired is false, or there are no "missed" values (meaning each row has a value), then an answer can be set, meaning the field is complete
+  if ((timeLeft === 0) && ((!allRequired) || (currentAnswer.indexOf(missed) === -1))) { // If allRequired is false, or there are no "missed" values (meaning each row has a value), then an answer can be set, meaning the field is complete, and the respondent can move on
     setAnswer(joinedArray) // Only stores value when either all fields have been answered, or when time runs out. That way, when the field is required, they cannot accidentally swipe forward.
     if (allRequired) { // If time has run out, and the last field has been answered, then may be ready to block the input
       blockInput()
@@ -445,7 +359,7 @@ function gatherAnswer () {
 }
 
 // Save the user's response (update the current answer)
-function change () {
+function change () { // Currently does nothing but gather the answer, but leaving as it is for now in case something else needs to happen.
   gatherAnswer()
 }
 
@@ -490,7 +404,7 @@ function timer () {
   }
 }
 
-function establishTimeLeft () { // This checks the current answer and leftover time, and either auto-advances if there is no time left, or establishes how much time is left.
+function establishTimeLeft () { // This checks if there is leftover time
   if ((leftoverTime == null) || (leftoverTime === '') || isNaN(leftoverTime)) {
     startTime = Date.now()
     timeLeft = timeStart
@@ -500,13 +414,13 @@ function establishTimeLeft () { // This checks the current answer and leftover t
   }
 } // End establishTimeLeft
 
-// Makes radio/check buttons unusable if that setting is turned on
+// Makes radio/check buttons unusable if that setting is turned on. Notice how this checks the "block" var, so there is no need to put blockInput in an IF statement that checks if "block" is true each time.
 function blockInput () {
   if (block) {
     for (var b = 0; b < numButtons; b++) {
       allButtons[b].disabled = true
     } // End FOR
-  }
+  } // End "block" is true
 }
 
 function adjustWindow () {
