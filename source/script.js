@@ -116,19 +116,22 @@ var timerDisp = timerContainer.querySelector('#timerdisp')
 var unitDisp = timerContainer.querySelector('#unitdisp')
 
 // PARAMETERS
-var headerText = getPluginParameter('header')
-var dispTimer = getPluginParameter('disp')
+
+var allLabels = getPluginParameter('labels')
+
 var timeStart = getPluginParameter('duration')
-var unit = getPluginParameter('unit')
-var missed = getPluginParameter('pass')
-var resume = getPluginParameter('resume')
+var headerText = getPluginParameter('header')
+
+var frameAdjust = getPluginParameter('adjust')
 var autoAdvance = getPluginParameter('advance')
 var block = getPluginParameter('block')
+var dispTimer = getPluginParameter('disp')
+var missed = getPluginParameter('pass')
 var nochange = getPluginParameter('nochange')
-var allLabels = getPluginParameter('labels')
-var frameAdjust = getPluginParameter('adjust')
 var numberRows = getPluginParameter('numberrows')
 var allRequired = getPluginParameter('required')
+var resume = getPluginParameter('resume')
+var unit = getPluginParameter('unit')
 var prevMetaData = getMetaData()
 var leftoverTime
 
@@ -140,10 +143,8 @@ var timePassed = 0 // Time passed so far
 var complete = false
 var currentAnswer
 var allChoices = []
-
-// var allAnswers = [[]] // This will be a two-dimentional array, where the first dimension is the row number starting at 0, and the second dimension is the choices selected in that row.
-
 var rowAnswers = []
+var buttonElements = [[]]
 
 if (prevMetaData != null) {
   var metaDataArray = prevMetaData.match(new RegExp('[^|]+', 'g'))
@@ -162,7 +163,87 @@ if (prevMetaData != null) {
   rowAnswers = metaDataArray.slice(1) // A single-dimensional array, where each element is a space-separated list of those answers
 }
 
-// Setup defaults of parameters if they are not defined
+// Setup defaults of parameters if they are not defined (defined in alphabetical order of the original parameter name, with the recommended parameter "duration" on top)
+
+// Recommended parameter
+
+// Parameter: duration
+if ((timeStart == null) || isNaN(timeStart)) {
+  timeStart = 10000 // Ten seconds, or 10,000 milliseconds
+} else {
+  timeStart *= 1000 // Convert seconds to milliseconds
+}
+
+// Optional parameters
+
+// Parameter: adjust
+if (isNaN(frameAdjust)) {
+  frameAdjust = 0
+}
+
+// Parameter: advance
+if (autoAdvance === 0) {
+  autoAdvance = false
+} else {
+  autoAdvance = true
+}
+
+// Parameter: block
+if (block === 0) {
+  block = false
+} else {
+  block = true
+}
+
+// Parameter: disp
+if (dispTimer === 0) {
+  dispTimer = false
+  timerContainer.parentElement.removeChild(timerContainer)
+} else {
+  dispTimer = true
+}
+
+// Parameter: pass
+if (missed == null) {
+  missed = '-99'
+} else {
+  missed = String(missed)
+}
+
+// Parameter: nochange
+if (nochange === 1) {
+  nochange = true
+} else {
+  nochange = false
+}
+
+// Parameter: numberrows
+if (numberRows === 0) {
+  numberRows = false
+} else {
+  numberRows = true
+}
+
+// Parameter: required
+if (allRequired === 1) {
+  allRequired = true
+} else {
+  allRequired = false
+}
+
+// Parameter: resume
+if (resume === 0) {
+  resume = false
+} else {
+  resume = true
+}
+
+// Parameter: unit
+if (unit == null) {
+  unit = 's'
+}
+
+// End default parameters
 
 if (headerText == null) {
   headerText = ''
@@ -172,71 +253,7 @@ if (headerText == null) {
 
 fieldHContainer.innerHTML = headerText
 
-if (dispTimer === 0) {
-  dispTimer = false
-  timerContainer.parentElement.removeChild(timerContainer)
-} else {
-  dispTimer = true
-}
-
-if ((timeStart == null) || isNaN(timeStart)) {
-  timeStart = 10000
-} else {
-  timeStart *= 1000
-}
-
-if (unit == null) {
-  unit = 's'
-}
 unitDisp.innerHTML = unit
-
-if (missed == null) {
-  missed = '-99'
-} else {
-  missed = String(missed)
-}
-
-if ((autoAdvance === 0) || ((!dispTimer) && (autoAdvance !== 1))) {
-  autoAdvance = false
-} else {
-  autoAdvance = true
-}
-
-if (block === 0) {
-  block = false
-} else {
-  block = true
-}
-
-if (resume === 0) {
-  resume = false
-} else {
-  resume = true
-}
-
-if (nochange === 1) {
-  nochange = true
-} else {
-  nochange = false
-}
-
-if (numberRows === 0) {
-  numberRows = false
-} else {
-  numberRows = true
-}
-
-if (allRequired === 1) {
-  allRequired = true
-} else {
-  allRequired = false
-}
-
-if (isNaN(frameAdjust)) {
-  frameAdjust = 0
-}
-
-// End default parameters
 
 // Check to make sure "pass" value is a choice value
 for (var c = 0; c < numChoices; c++) {
@@ -278,8 +295,6 @@ for (var r = 0; r < numTdRemove; r++) {
   var thisPassTag = passTags[r]
   thisPassTag.parentElement.removeChild(thisPassTag) // Remove the pass value as a label
 }
-
-var buttonElements = [[]]
 
 // Assign each row a different <input> tag name attribute, and checkmarks if it has been previously selected
 
