@@ -317,17 +317,14 @@ var numButtons = allButtons.length
 
 // The below IF is for blocking and advancing if applicable when there is already an answer (aka if there is already metadata)
 if (prevMetaData != null) { // If there is already a set answer when the field first appears, then this statement is true
-  if ((!mustComplete) || (prevMetaData.indexOf(missed) === -1)) { // This IF is because if all rows must be completed, and not all rows have been completed (meaning the "pass" value would be present), then nothing should be blocked or auto-advanced
-    console.log(mustComplete)
-    console.log(prevMetaData.indexOf(missed))
-    if (!resume) { // There is already a set answer, and the field cannot be resumed
-      complete = true
-      blockInput()
+  if ((leftoverTime === 0) && ((!mustComplete) || (prevMetaData.indexOf(missed) === -1))) { // If there is no time left, and either all rows have to be completed, or all fields are already complete
+    complete = true
+    blockInput()
 
-      if (autoAdvance) {
-        goToNextField()
-      }
-    } // End cannot resume field
+    if (autoAdvance) {
+      goToNextField()
+    }
+    setAnswer(missed)
   }
 }
 
@@ -426,9 +423,9 @@ function gatherAnswer () {
       currentAnswer += '|' + joinedArray
     }
   } // End loop through each row
-  if ((!mustComplete) || (currentAnswer.indexOf(missed) === -1)) { // If mustComplete is false, or there are no "missed" values (meaning each row has a value), then an answer can be set, meaning the field is complete
-    setAnswer(timeLeft) // Only stores value when either all fields have been answered, or when time runs out. That way, when the field is required, they cannot accidentally swipe forward.
-    if ((timeLeft === 0) && mustComplete) { // If time has run out, and the last field has been answered, then may be ready to block the input
+  if ((timeLeft === 0) && ((!mustComplete) || (currentAnswer.indexOf(missed) === -1))) { // If mustComplete is false, or there are no "missed" values (meaning each row has a value), then an answer can be set, meaning the field is complete
+    setAnswer(joinedArray) // Only stores value when either all fields have been answered, or when time runs out. That way, when the field is required, they cannot accidentally swipe forward.
+    if (mustComplete) { // If time has run out, and the last field has been answered, then may be ready to block the input
       blockInput()
 
       if (autoAdvance) {
@@ -470,11 +467,11 @@ function timer () {
     complete = true
     timeLeft = 0
     if ((!mustComplete) || (currentAnswer.indexOf(missed) === -1)) { // This is true if not every row has to be completed, or if every row has to be completed, but all are completed
+      setAnswer(missed)
       blockInput()
       if (autoAdvance) {
         goToNextField()
       }
-      setAnswer('0')
     } // End setup block and advance
   } // End timer ran out
   setMetaData(String(timeLeft) + ' ' + String(timeNow) + currentAnswer)
