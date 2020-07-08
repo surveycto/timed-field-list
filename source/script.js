@@ -41,7 +41,7 @@ var fieldProperties = {
       value: 5
     },
     {
-      key: 'mustcomplete',
+      key: 'allRequired',
       value: 1
     },
     {
@@ -128,7 +128,7 @@ var nochange = getPluginParameter('nochange')
 var allLabels = getPluginParameter('labels')
 var frameAdjust = getPluginParameter('adjust')
 var numberRows = getPluginParameter('numberrows')
-var mustComplete = getPluginParameter('mustcomplete')
+var allRequired = getPluginParameter('required')
 var prevMetaData = getMetaData()
 var leftoverTime
 
@@ -145,6 +145,8 @@ var allChoices = []
 
 var rowAnswers = []
 
+console.log('Previous metadata:')
+console.log(prevMetaData)
 if (prevMetaData != null) {
   var metaDataArray = prevMetaData.match(new RegExp('[^|]+', 'g'))
   var timeArray = metaDataArray[0].match(new RegExp('[^ ]+', 'g'))
@@ -226,10 +228,10 @@ if (numberRows === 0) {
   numberRows = true
 }
 
-if (mustComplete === 1) {
-  mustComplete = true
+if (allRequired === 1) {
+  allRequired = true
 } else {
-  mustComplete = false
+  allRequired = false
 }
 
 if (isNaN(frameAdjust)) {
@@ -317,7 +319,7 @@ var numButtons = allButtons.length
 
 // The below IF is for blocking and advancing if applicable when there is already an answer (aka if there is already metadata)
 if (prevMetaData != null) { // If there is already a set answer when the field first appears, then this statement is true
-  if ((leftoverTime === 0) && ((!mustComplete) || (prevMetaData.indexOf(missed) === -1))) { // If there is no time left, and either all rows have to be completed, or all fields are already complete
+  if ((leftoverTime === 0) && ((!allRequired) || (prevMetaData.indexOf(missed) === -1))) { // If there is no time left, and either all rows have to be completed, or all fields are already complete
     complete = true
     blockInput()
 
@@ -423,15 +425,15 @@ function gatherAnswer () {
       currentAnswer += '|' + joinedArray
     }
   } // End loop through each row
-  if ((timeLeft === 0) && ((!mustComplete) || (currentAnswer.indexOf(missed) === -1))) { // If mustComplete is false, or there are no "missed" values (meaning each row has a value), then an answer can be set, meaning the field is complete
+  if ((timeLeft === 0) && ((!allRequired) || (currentAnswer.indexOf(missed) === -1))) { // If allRequired is false, or there are no "missed" values (meaning each row has a value), then an answer can be set, meaning the field is complete
     setAnswer(joinedArray) // Only stores value when either all fields have been answered, or when time runs out. That way, when the field is required, they cannot accidentally swipe forward.
-    if (mustComplete) { // If time has run out, and the last field has been answered, then may be ready to block the input
+    if (allRequired) { // If time has run out, and the last field has been answered, then may be ready to block the input
       blockInput()
 
       if (autoAdvance) {
         goToNextField()
       }
-    } // End check for mustComplete if time has run out
+    } // End check for allRequired if time has run out
   } // End setting answer IF
 }
 
@@ -466,7 +468,7 @@ function timer () {
   if (timeLeft < 0) { // Timer ended
     complete = true
     timeLeft = 0
-    if ((!mustComplete) || (currentAnswer.indexOf(missed) === -1)) { // This is true if not every row has to be completed, or if every row has to be completed, but all are completed
+    if ((!allRequired) || (currentAnswer.indexOf(missed) === -1)) { // This is true if not every row has to be completed, or if every row has to be completed, but all are completed
       setAnswer(missed)
       blockInput()
       if (autoAdvance) {
