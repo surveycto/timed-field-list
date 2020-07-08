@@ -239,8 +239,15 @@ if (resume === 0) {
 }
 
 // Parameter: unit
-if (unit == null) {
+if (unit === 'ms') {
+  round = 1
+} else if (unit === 'cs') {
+  round = 10
+} else if (unit === 'ds') {
+  round = 100
+} else { // If the parameter value of "unit" is invalid, then it will be seconds.
   unit = 's'
+  round = 1000
 }
 
 // End default parameters
@@ -365,19 +372,6 @@ for (var i = 0; i < numButtons; i++) {
 }
 
 // Timing calculations
-if (unit === 'ms') {
-  unit = 'milliseconds'
-  round = 1
-} else if (unit === 'cs') {
-  unit = 'centiseconds'
-  round = 10
-} else if (unit === 'ds') {
-  unit = 'deciseconds'
-  round = 100
-} else {
-  unit = 'seconds'
-  round = 1000
-}
 
 if (platform === 'web') {
   parent.onresize = adjustWindow
