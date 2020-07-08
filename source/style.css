@@ -100,7 +100,7 @@ col.radio-col {
 
 /* Adjustments to button */
 [type="radio"] + label, [type="checkbox"] + label {
-    color: #000000; /*Color of font*/
+    color: #000; /*Color of font*/
     cursor: pointer; /* Turns the cursor into a hand when hovering */
     display: inline-block; /*Lines up radio button with label*/
     position: relative; /*Keeps radio button in correct location*/
@@ -109,11 +109,7 @@ col.radio-col {
 
 /* Adjustments to disabled button */
 [type="radio"]:disabled + label, [type="checkbox"]:disabled + label {
-    color: #000000; /*Color of font*/
     cursor: default;
-    display: inline-block; /*Lines up radio button with label*/
-    position: relative; /*Keeps radio button in correct location*/
-    /* padding-left: 22px; */ /*Distant the label is from the center of the radio button*/
 }
 
 [type="checkbox"] + label {
@@ -129,7 +125,7 @@ col.radio-col {
 
 /* Disabled button background */
 [type="radio"]:disabled + label:before, [type="checkbox"]:disabled + label:before {
-    background: #dddddd; /*Background color of the radio button*/
+    background: #ddd; /*Background color of the radio button*/
 }
 
 /* Border of RADIO */
