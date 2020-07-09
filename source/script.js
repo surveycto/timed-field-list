@@ -45,7 +45,6 @@ var missed = getPluginParameter('pass')
 var nochange = getPluginParameter('nochange')
 var numberRows = getPluginParameter('numberrows')
 var allRequired = getPluginParameter('required')
-var resume = getPluginParameter('resume')
 var unit = getPluginParameter('unit')
 var prevMetaData = getMetaData()
 var leftoverTime
@@ -144,13 +143,6 @@ if (allRequired === 1) {
   allRequired = true
 } else {
   allRequired = false
-}
-
-// Parameter: resume
-if (resume === 0) {
-  resume = false
-} else {
-  resume = true
 }
 
 // Parameter: unit
