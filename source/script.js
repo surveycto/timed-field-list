@@ -40,6 +40,7 @@ var frameAdjust = getPluginParameter('adjust')
 var autoAdvance = getPluginParameter('advance')
 var block = getPluginParameter('block')
 var dispTimer = getPluginParameter('disp')
+var endEarly = getPluginParameter('endearly')
 var missed = getPluginParameter('pass')
 var nochange = getPluginParameter('nochange')
 var numberRows = getPluginParameter('numberrows')
@@ -117,13 +118,6 @@ if (dispTimer === 0) {
   dispTimer = true
 }
 
-// Parameter: pass
-if (missed == null) {
-  missed = '-99'
-} else {
-  missed = String(missed)
-}
-
 // Parameter: nochange
 if (nochange === 1) {
   nochange = true
@@ -136,6 +130,13 @@ if (numberRows === 0) {
   numberRows = false
 } else {
   numberRows = true
+}
+
+// Parameter: pass
+if (missed == null) {
+  missed = '-99'
+} else {
+  missed = String(missed)
 }
 
 // Parameter: required
@@ -164,7 +165,16 @@ if (unit === 'ms') {
   round = 1000
 }
 
-// End default parameters
+// Reliant on other parameters
+
+// Parameter: endearly
+if ((endEarly == null) || (nochange)) { // If a row is blocked when it is answered, then the respondent should be able to move on when they are done, since otherwise they are waiting for nothing.
+  endEarly = true
+} else {
+  endEarly = false
+}
+
+// End default parameters values
 
 if (headerText == null) {
   headerText = ''
@@ -340,22 +350,26 @@ function gatherAnswer () {
     } // End loop through each button in the row
     var joinedArray = selectedArray.join(' ')
     if (joinedArray === '') {
-      currentAnswer += '|' + missed // The question mark means it has not been answered
+      currentAnswer += '|' + missed // Set as "missed" value if not yet
       joinedArray = missed
     } else {
       currentAnswer += '|' + joinedArray
     }
   } // End loop through each row
-  if ((timeLeft === 0) && ((!allRequired) || (currentAnswer.indexOf(missed) === -1))) { // If allRequired is false, or there are no "missed" values (meaning each row has a value), then an answer can be set, meaning the field is complete, and the respondent can move on
-    setAnswer(joinedArray) // Only stores value when either all fields have been answered, or when time runs out. That way, when the field is required, they cannot accidentally swipe forward.
-    if (allRequired) { // If time has run out, and the last field has been answered, then may be ready to block the input
-      blockInput()
 
-      if (autoAdvance) {
-        goToNextField()
-      }
-    } // End check for allRequired if time has run out
+  var allAnswered = (currentAnswer.indexOf(missed) === -1)
+  var timeZero = (timeLeft === 0)
+
+  if (allAnswered && (endEarly || timeZero)) { // If all rows have been answered, and either they're allowed to leave early or time has reached 0, then they can leave the field.
+    setAnswer(joinedArray)
   } // End setting answer IF
+
+  if (allRequired && allAnswered && timeZero) { // Usually, blocking input and going to the next field is taken care of by the timer() function. However, if all rows are required due to "allRequired" being true, then it also needs to be addressed when the final field row is completed
+    blockInput()
+    if (autoAdvance) {
+      goToNextField()
+    }
+  }
 }
 
 // Save the user's response (update the current answer)
