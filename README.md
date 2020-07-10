@@ -43,11 +43,11 @@ To learn all about how to use this field plug-in, check out the [wiki]()
 
 **To use this field plug-in as-is**, just download the [timed-field-list.fieldplugin.zip](https://github.com/surveycto/timed-field-list/raw/master/timed-field-list.fieldplugin.zip) file from this repo, and attach it to your form.
 
-**To use this field plug-in as-is:**
+**To use with the sample form:**
 
 1. Download the [sample form](extras/sample-form) from this repo and upload it to your SurveyCTO server.
 1. Download the [timed-field-list.fieldplugin.zip](https://github.com/surveycto/timed-field-list/raw/master/timed-field-list.fieldplugin.zip) file from this repo, and attach it to the sample form on your SurveyCTO server.
-1. Adjust the parameter if you would like to use a different unit (see below).
+1. Adjust the parameters as you see fit.
 
 ## Parameters
 See the [wiki]() for details about all of the parameters and how to use them.
