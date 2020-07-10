@@ -96,10 +96,10 @@ if (isNaN(frameAdjust)) {
 }
 
 // Parameter: advance
-if (autoAdvance === 0) {
-  autoAdvance = false
-} else {
+if (autoAdvance === 1) {
   autoAdvance = true
+} else {
+  autoAdvance = false
 }
 
 // Parameter: block
