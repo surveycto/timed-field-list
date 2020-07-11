@@ -90,7 +90,7 @@ if (autoAdvance === 1) {
 }
 
 // Parameter: block (On by default unless not a timed field)
-if ((block === 0) || (timedField && (block !== 1))) {
+if ((block === 0) || (!timedField && (block !== 1))) {
   block = false
 } else {
   block = true
@@ -269,7 +269,7 @@ if (prevMetaData != null) { // If there is already a set answer when the field f
   if ((allAnswered && (!timedField || endEarly || (leftoverTime === 0))) || ((leftoverTime === 0) && !allRequired)) { // Whether the field is complete, and the respondent can move to the next page.
     setAnswer(completeValue)
     complete = true
-    if (!timedField) {
+    if (timedField) {
       blockInput()
       if (autoAdvance) {
         goToNextField()
