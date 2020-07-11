@@ -56,9 +56,10 @@ var timeLeft // Starts this way for the display.
 var timePassed = 0 // Time passed so far
 var complete = false
 var currentAnswer
-var allChoices = []
+var choiceValues = []
 var rowAnswers = []
 var buttonElements = [[]]
+var completeValue // This will be the parameter for the setAnswer() function when the respondent is allowed to move on to the next field. The actual field answer does not matter, so by default, it will be the "missed" value. However, if the "missed" value is not a choice, then it will be the first choice value.
 
 if (prevMetaData != null) {
   var metaDataArray = prevMetaData.match(new RegExp('[^|]+', 'g'))
@@ -181,12 +182,7 @@ unitDisp.innerHTML = unit
 // Check to make sure "pass" value is a choice value
 for (var c = 0; c < numChoices; c++) {
   var choice = choices[c]
-  allChoices.push(choice.CHOICE_VALUE)
-}
-if (allChoices.indexOf(missed) === -1) {
-  var errorMessage = missed + ' is not specified as a choice value. Please add a choice with ' + missed + ' as a choice value, or this field plug-in will not work.'
-  document.querySelector('#error').innerHTML = 'Error: ' + errorMessage
-  throw new Error(errorMessage)
+  choiceValues.push(choice.CHOICE_VALUE)
 }
 
 if (fieldProperties.LABEL) {
@@ -214,9 +210,15 @@ for (var l = 0; l < numLabels; l++) { // Populates the table with labels
 // Removes the "missed" values as a visible choice
 var passTags = document.querySelectorAll('#choice-' + missed)
 var numTdRemove = passTags.length
-for (var r = 0; r < numTdRemove; r++) {
-  var thisPassTag = passTags[r]
-  thisPassTag.parentElement.removeChild(thisPassTag) // Remove the pass value as a label
+
+if (numTdRemove === 0) {
+  completeValue = choiceValues[0]
+} else {
+  completeValue = missed
+  for (var r = 0; r < numTdRemove; r++) {
+    var thisPassTag = passTags[r]
+    thisPassTag.parentElement.removeChild(thisPassTag) // Remove the pass value as a column if applicable
+  }
 }
 
 // Assign each row a different <input> tag name attribute, and checkmarks if it has been previously selected
@@ -262,7 +264,7 @@ if (prevMetaData != null) { // If there is already a set answer when the field f
     if (autoAdvance) {
       goToNextField()
     }
-    setAnswer(missed)
+    setAnswer(completeValue)
   }
 }
 
@@ -353,7 +355,7 @@ function gatherAnswer () {
   var timeZero = (timeLeft === 0)
 
   if (allAnswered && (endEarly || timeZero)) { // If all rows have been answered, and either they're allowed to leave early or time has reached 0, then they can leave the field.
-    setAnswer(joinedArray)
+    setAnswer(completeValue)
   } // End setting answer IF
 
   if (allRequired && allAnswered && timeZero) { // Usually, blocking input and going to the next field is taken care of by the timer() function. However, if all rows are required due to "allRequired" being true, then it also needs to be addressed when the final field row is completed
@@ -396,7 +398,7 @@ function timer () {
     complete = true
     timeLeft = 0
     if ((!allRequired) || (currentAnswer.indexOf(missed) === -1)) { // This is true if not every row has to be completed, or if every row has to be completed, but all are completed
-      setAnswer(missed)
+      setAnswer(completeValue)
       blockInput()
       if (autoAdvance) {
         goToNextField()
