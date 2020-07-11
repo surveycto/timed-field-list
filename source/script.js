@@ -114,7 +114,7 @@ if (block === 0) {
 }
 
 // Parameter: disp
-if ((dispTimer === 0) || (timeStart === 0)) { // If the form designer specifically states the timer will not be displayed, or if no "duration" was specified (meaning it will not be timed anyway), then the timer will not be shown.
+if (!timedField || (dispTimer === 0)) { // If the form designer specifically states the timer will not be displayed, or if no "duration" was specified (meaning it will not be timed anyway), then the timer will not be shown.
   dispTimer = false
   timerContainer.parentElement.removeChild(timerContainer)
 } else {
