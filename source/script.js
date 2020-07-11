@@ -63,23 +63,6 @@ var completeValue // This will be the parameter for the setAnswer() function whe
 var timedField // A boolean, whether or not the field list is a timed field list.
 var currentAnswerArray = []
 
-if (prevMetaData != null) {
-  var metaDataArray = prevMetaData.match(new RegExp('[^|]+', 'g'))
-  var timeArray = metaDataArray[0].match(new RegExp('[^ ]+', 'g'))
-  var lastTimeLeft = parseInt(timeArray[0])
-  var lastTimeNow = parseInt(timeArray[1])
-  var timeWhileGone = Date.now() - lastTimeNow // This is how much time has passed since the respondent left the field and returned
-
-  leftoverTime = lastTimeLeft - timeWhileGone // This is how much time should be remaining on the timer. It takes how much was previously remaining, and subtracts the amount of time that has passed since the respondent was last at this field. This way, the respondent cannot leave the field and come back to extend their time and cheat.
-
-  if (leftoverTime < 0) {
-    complete = true
-    leftoverTime = 0
-  }
-
-  rowAnswers = metaDataArray.slice(1) // A single-dimensional array, where each element is a space-separated list of those answers
-}
-
 // Setup defaults of parameters if they are not defined (defined in alphabetical order of the original parameter name, with the recommended parameter "duration" on top)
 
 // Recommended parameter
@@ -106,8 +89,8 @@ if (autoAdvance === 1) {
   autoAdvance = false
 }
 
-// Parameter: block
-if (block === 0) {
+// Parameter: block (On by default unless not a timed field)
+if ((block === 0) || (timedField && (block !== 1))) {
   block = false
 } else {
   block = true
@@ -171,6 +154,27 @@ if ((endEarly == null) || (nochange)) { // If a row is blocked when it is answer
 }
 
 // End default parameters values
+
+if (prevMetaData != null) {
+  var metaDataArray = prevMetaData.match(new RegExp('[^|]+', 'g'))
+  if (timedField) {
+    var timeArray = metaDataArray[0].match(new RegExp('[^ ]+', 'g'))
+    var lastTimeLeft = parseInt(timeArray[0])
+    var lastTimeNow = parseInt(timeArray[1])
+    var timeWhileGone = Date.now() - lastTimeNow // This is how much time has passed since the respondent left the field and returned
+
+    leftoverTime = lastTimeLeft - timeWhileGone // This is how much time should be remaining on the timer. It takes how much was previously remaining, and subtracts the amount of time that has passed since the respondent was last at this field. This way, the respondent cannot leave the field and come back to extend their time and cheat.
+
+    if (leftoverTime < 0) {
+      complete = true
+      leftoverTime = 0
+    }
+
+    rowAnswers = metaDataArray.slice(1) // A single-dimensional array, where each element is a space-separated list of those answers
+  } else {
+    rowAnswers = metaDataArray
+  }
+}
 
 if (headerText == null) {
   headerText = ''
@@ -364,7 +368,7 @@ function gatherAnswer () {
   var timeZero = (timeLeft === 0) // Will be false if not a timed field
 
   if (!timedField) { // If not a timed field, then set the metadata here instead of in the timer
-    setMetaData(currentAnswer.substring(1)) // Drop the first '|' when setting the metadata
+    setMetaData(currentAnswer) // Drop the first '|' when setting the metadata
   }
 
   if (allAnswered && (!timedField || endEarly || timeZero)) { // If all rows have been answered, and either they're allowed to leave early or time has reached 0, then they can leave the field.
