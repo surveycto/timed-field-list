@@ -62,6 +62,7 @@ var buttonElements = [[]]
 var completeValue // This will be the parameter for the setAnswer() function when the respondent is allowed to move on to the next field. The actual field answer does not matter, so by default, it will be the "missed" value. However, if the "missed" value is not a choice, then it will be the first choice value.
 var timedField // A boolean, whether or not the field list is a timed field list.
 var currentAnswerArray = []
+var numColumns
 
 // Setup defaults of parameters if they are not defined (defined in alphabetical order of the original parameter name, with the recommended parameter "duration" on top)
 
@@ -220,7 +221,9 @@ var numTdRemove = passTags.length
 
 if (numTdRemove === 0) {
   completeValue = choiceValues[0]
+  numColumns = numChoices
 } else {
+  numColumns = numChoices - 1
   completeValue = missed
   for (var r = 0; r < numTdRemove; r++) {
     var thisPassTag = passTags[r]
@@ -229,15 +232,13 @@ if (numTdRemove === 0) {
 }
 
 // Assign each row a different <input> tag name attribute, and checkmarks if it has been previously selected
-
-var numRowButtons = numChoices - 1
 for (var l = 0; l < numLabels; l++) { // Populates the table with the buttons
   var answers = rowAnswers[l] // Selected choices in that row
   var fieldRow = fieldRows[l] // TR element
   var rowTds = fieldRow.querySelectorAll('td.fl-radio') // TDs with buttons
   var rowButtons = fieldRow.querySelectorAll('input') // Actual buttons in the TDs
   var rowName = 'row-' + String(l)
-  for (var r = 0; r < numRowButtons; r++) {
+  for (var r = 0; r < numColumns; r++) {
     var rowTd = rowTds[r]
     var tdInput = rowTd.querySelector('input')
     var tdLabel = rowTd.querySelector('label') // The label is empty, and just used for creating new buttons
@@ -342,7 +343,7 @@ function gatherAnswer () {
   currentAnswerArray = [] // This will store an array of each row of space-separated answers. They will then be joined into a string.
   for (var r = 0; r < numLabels; r++) {
     var selectedArray = [] // This will store a list of all choices selected in that row
-    for (var c = 0; c < numChoices - 1; c++) {
+    for (var c = 0; c < numColumns; c++) {
       var thisButton = buttonElements[r][c]
       var rowDisabled = false
       if (thisButton.checked) {
