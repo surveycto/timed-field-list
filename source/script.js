@@ -60,6 +60,8 @@ var choiceValues = []
 var rowAnswers = []
 var buttonElements = [[]]
 var completeValue // This will be the parameter for the setAnswer() function when the respondent is allowed to move on to the next field. The actual field answer does not matter, so by default, it will be the "missed" value. However, if the "missed" value is not a choice, then it will be the first choice value.
+var timedField // A boolean, whether or not the field list is a timed field list.
+var currentAnswerArray = []
 
 if (prevMetaData != null) {
   var metaDataArray = prevMetaData.match(new RegExp('[^|]+', 'g'))
@@ -84,8 +86,9 @@ if (prevMetaData != null) {
 
 // Parameter: duration
 if ((timeStart == null) || isNaN(timeStart)) {
-  timeStart = 10000 // Ten seconds, or 10,000 milliseconds
+  timedField = false // The timer will not run if there is no duration
 } else {
+  timedField = true
   timeStart *= 1000 // Convert seconds to milliseconds
 }
 
@@ -111,7 +114,7 @@ if (block === 0) {
 }
 
 // Parameter: disp
-if (dispTimer === 0) {
+if ((dispTimer === 0) || (timeStart === 0)) { // If the form designer specifically states the timer will not be displayed, or if no "duration" was specified (meaning it will not be timed anyway), then the timer will not be shown.
   dispTimer = false
   timerContainer.parentElement.removeChild(timerContainer)
 } else {
@@ -257,14 +260,17 @@ var numButtons = allButtons.length
 
 // The below IF is for blocking and advancing if applicable when there is already an answer (aka if there is already metadata)
 if (prevMetaData != null) { // If there is already a set answer when the field first appears, then this statement is true
-  if ((leftoverTime === 0) && ((!allRequired) || (prevMetaData.indexOf(missed) === -1))) { // If there is no time left, and either all rows have to be completed, or all fields are already complete
-    complete = true
-    blockInput()
+  var allAnswered = (metaDataArray.indexOf(missed) === -1) // Whether or not there were any "missed" values. If none are found, then all rows have been answered. Using "metaDataArray", since that stores an array of previous row answers
 
-    if (autoAdvance) {
-      goToNextField()
-    }
+  if ((allAnswered && (!timedField || endEarly || (leftoverTime === 0))) || ((leftoverTime === 0) && !allRequired)) { // Whether the field is complete, and the respondent can move to the next page.
     setAnswer(completeValue)
+    complete = true
+    if (!timedField) {
+      blockInput()
+      if (autoAdvance) {
+        goToNextField()
+      }
+    }
   }
 }
 
@@ -306,10 +312,13 @@ if (platform === 'web') {
 }
 
 gatherAnswer() // This sets each answer to the "missed" value in case no choice is selected
-establishTimeLeft()
 
 adjustWindow()
-setInterval(timer, 1)
+
+if (timedField) {
+  establishTimeLeft()
+  setInterval(timer, 1)
+}
 
 ResizeSensor(rowTable, adjustWindow) // Adjust whenever the size of the rowTable changes
 
@@ -326,9 +335,9 @@ function clearAnswer () {
 }
 
 function gatherAnswer () {
-  currentAnswer = ''
+  currentAnswerArray = [] // This will store an array of each row of space-separated answers. They will then be joined into a string.
   for (var r = 0; r < numLabels; r++) {
-    var selectedArray = []
+    var selectedArray = [] // This will store a list of all choices selected in that row
     for (var c = 0; c < numChoices - 1; c++) {
       var thisButton = buttonElements[r][c]
       var rowDisabled = false
@@ -344,27 +353,31 @@ function gatherAnswer () {
     } // End loop through each button in the row
     var joinedArray = selectedArray.join(' ')
     if (joinedArray === '') {
-      currentAnswer += '|' + missed // Set as "missed" value if not yet
-      joinedArray = missed
+      currentAnswerArray.push(missed) // Set as "missed" value if not yet answered
     } else {
-      currentAnswer += '|' + joinedArray
+      currentAnswerArray.push(joinedArray)
     }
   } // End loop through each row
 
-  var allAnswered = (currentAnswer.indexOf(missed) === -1)
-  var timeZero = (timeLeft === 0)
+  currentAnswer = currentAnswerArray.join('|')
+  var allAnswered = (currentAnswerArray.indexOf(missed) === -1) // If there are no "missed" values, then this is true. Checking the array in case a choice value contains the missed value (e.g. a choice value is -999 while the missed value is -99). This works because the missed value will be by itself, with no other choice values in that array part.
+  var timeZero = (timeLeft === 0) // Will be false if not a timed field
 
-  if (allAnswered && (endEarly || timeZero)) { // If all rows have been answered, and either they're allowed to leave early or time has reached 0, then they can leave the field.
-    setAnswer(completeValue)
-  } // End setting answer IF
-
-  if (allRequired && allAnswered && timeZero) { // Usually, blocking input and going to the next field is taken care of by the timer() function. However, if all rows are required due to "allRequired" being true, then it also needs to be addressed when the final field row is completed
-    blockInput()
-    if (autoAdvance) {
-      goToNextField()
-    }
+  if (!timedField) { // If not a timed field, then set the metadata here instead of in the timer
+    setMetaData(currentAnswer.substring(1)) // Drop the first '|' when setting the metadata
   }
-}
+
+  if (allAnswered && (!timedField || endEarly || timeZero)) { // If all rows have been answered, and either they're allowed to leave early or time has reached 0, then they can leave the field.
+    setAnswer(completeValue)
+
+    if (allRequired && timeZero) { // Usually, blocking input and going to the next field is taken care of by the timer() function. However, if all rows are required due to "allRequired" being true, then it also needs to be addressed when the final field row is completed
+      blockInput()
+      if (autoAdvance) {
+        goToNextField()
+      }
+    } // End allRequired and timeZero
+  } // End setting answer IF
+} // End gatherAnswer
 
 // Save the user's response (update the current answer)
 function change () { // Currently does nothing but gather the answer, but leaving as it is for now in case something else needs to happen.
@@ -397,7 +410,7 @@ function timer () {
   if (timeLeft < 0) { // Timer ended
     complete = true
     timeLeft = 0
-    if ((!allRequired) || (currentAnswer.indexOf(missed) === -1)) { // This is true if not every row has to be completed, or if every row has to be completed, but all are completed
+    if ((!allRequired) || (currentAnswerArray.indexOf(missed) === -1)) { // This is true if not every row has to be completed, or if every row has to be completed, but all are completed
       setAnswer(completeValue)
       blockInput()
       if (autoAdvance) {
@@ -405,7 +418,7 @@ function timer () {
       }
     } // End setup block and advance
   } // End timer ran out
-  setMetaData(String(timeLeft) + ' ' + String(timeNow) + currentAnswer)
+  setMetaData(String(timeLeft) + ' ' + String(timeNow) + '|' + currentAnswer)
 
   if (dispTimer) {
     timerDisp.innerHTML = String(Math.ceil(timeLeft / round))
