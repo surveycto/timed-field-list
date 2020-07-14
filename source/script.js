@@ -332,10 +332,24 @@ ResizeSensor(rowTable, adjustWindow) // Adjust whenever the size of the rowTable
 function clearAnswer () {
   var selectedOptions = document.querySelectorAll('input:checked')
   var numSelected = selectedOptions.length
-  for (var s = 0; s < numSelected; s++) {
+
+  for (var b = 0; b < numButtons; b++) { // Re-enable buttons
+    allButtons[b].disabled = false
+  }
+
+  for (var s = 0; s < numSelected; s++) { // Un-check buttons
     var selectedOption = selectedOptions[s]
     selectedOption.checked = false
     selectedOption.parentElement.classList.remove('selected')
+  }
+
+  gatherAnswer()
+
+  if (timedField) {
+    leftoverTime = null
+    timeStart = getPluginParameter('duration') * 1000
+    establishTimeLeft()
+    complete = false
   }
 }
 
