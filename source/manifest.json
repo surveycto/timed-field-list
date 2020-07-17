@@ -1,7 +1,7 @@
 {
 	"name" : "Timed field list",
 	"author" : "Dobility",
-	"version": "1.1.1",
+	"version": "1.1.2",
 	"supportedFieldTypes": ["select_one", "select_multiple"],
 	"externalJs": ["ResizeSensor.js"],
 	"hideDefaultRequiredMessage": false,

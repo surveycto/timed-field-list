@@ -185,12 +185,14 @@ col.radio-col {
 /* Checkmark of SELECTED CHECKMARK */
 [type="checkbox"]:checked + label:after {
     color: #047cc2;
-    content: url("{{PLUGINDIR}}/checkmark.png");
+    content: url({{PLUGINDIR}}/checkmark.svg);
     font-size: calc(var(--check-size)); /*Size of the checkmark*/
     font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;
     font-weight: bold;
-    left: -21px; /*Offset so it can be centered in the outer circle*/
-    top: -29px; /*Offset so it can be centered in the outer circle*/
+    left: -18px; /*Offset so it can be centered in the outer circle*/
+    top: -24px; /*Offset so it can be centered in the outer circle*/
+    width: 37px;
+    height: 37px;
 }
 
 /* Disabled selected checkmark */
