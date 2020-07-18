@@ -197,7 +197,8 @@ col.radio-col {
 
 /* Disabled selected checkmark */
 [type="checkbox"]:checked:disabled + label:after {
-    color: #63727a; /*Color of the inner circle*/
+    color: #63727a;
+    content: url({{PLUGINDIR}}/checkmark-gray.svg); /*Color of the checkmark when disabled*/
 }
 
 /* Makes SELECTED DISAPPEAR */
