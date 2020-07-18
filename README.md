@@ -1,11 +1,14 @@
 # Timed field list
 
-![Quick appearance](extras/preview-images/quick.png)  
-*select_one* with "quick" *appearance*
+![Selected](extras/readme-images/selected.png)
 
-| numeric | select_one | select_multiple |
-| --- | --- | --- |
-| <img src="extras/preview-images/numeric.png" alt="numeric" title="numeric" width="100px"/> | <img src="extras/preview-images/select_one.png" alt="select_one" title="select_one" width="100px"/> | <img src="extras/preview-images/select_multiple.png" alt="select_multiple" title="select_multiple" width="100px"/> |
+| None selected | All blocked | select_multiple | Not timed |
+| --- | --- | --- | --- |
+| <img src="extras/readme-images/none-selected.png" alt="None selected" title="None selected" width="150px"/> | <img src="extras/readme-images/all-blocked.png" alt="All blocked" title="All blocked" width="150px"/> | <img src="extras/readme-images/select_multiple.png" alt="select_multiple" title="select_multiple" width="150px"/> | <img src="extras/readme-images/not-timed.png" alt="Not timed" title="Not timed" width="150px"/> |
+
+| Milliseconds | No change | Blocked checks | No blocking |
+| --- | --- | --- | --- |
+| <img src="extras/readme-images/milliseconds.png" alt="Milliseconds" title="Milliseconds" width="150px"/> | <img src="extras/readme-images/nochange.png" alt="No change" title="No change" width="150px"/> | <img src="extras/readme-images/sm-blocked.png" alt="Blocked checks" title="Blocked checks" width="150px"/> | <img src="extras/readme-images/not-blocked.png" alt="No blocking" title="No blocking" width="150px"/> |
 
 ## Description
 
