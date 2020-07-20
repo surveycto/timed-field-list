@@ -185,7 +185,6 @@ col.radio-col {
 /* Checkmark of SELECTED CHECKMARK */
 [type="checkbox"]:checked + label:after {
     color: #047cc2;
-    content: url({{PLUGINDIR}}/checkmark.svg);
     font-size: calc(var(--check-size)); /*Size of the checkmark*/
     font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;
     font-weight: bold;
@@ -195,10 +194,25 @@ col.radio-col {
     height: 37px;
 }
 
-/* Disabled selected checkmark */
-[type="checkbox"]:checked:disabled + label:after {
-    color: #63727a;
-    content: url({{PLUGINDIR}}/checkmark-gray.svg); /*Color of the checkmark when disabled*/
+[type="checkbox"]:checked + label svg.checkmark {
+    position: absolute;
+    display: block;
+    height: 35px;
+    width: 35px;
+    top: -23px;
+    left: -17px;
+}
+
+[type="checkbox"]:checked:not(:disabled) + label svg.checkmark {
+    fill: #047cc2;
+}
+
+[type="checkbox"]:checked:disabled + label svg.checkmark {
+    fill: #63727a;
+}
+
+[type="checkbox"]:not(:checked) + label svg.checkmark {
+    display: none;
 }
 
 /* Makes SELECTED DISAPPEAR */
@@ -214,4 +228,9 @@ col.radio-col {
     position: absolute;
     /* -webkit-transition: all 0.1s ease; /* Small animation when check disappears */
     /* transition: all 0.1s ease; /* Small animation when check disappears */
+}
+
+/* hide SVG symbol definitions */
+.symbol {
+    display: none;
 }
