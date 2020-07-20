@@ -202,8 +202,8 @@ col.radio-col {
     fill: #63727a;
 }
 
-/* Not selected checkmark */
-[type="checkbox"]:not(:checked) + label svg.checkmark {
+/* Radio button, or not selected checkmark */
+[type="radio"] + label svg.checkmark, [type="checkbox"]:not(:checked) + label svg.checkmark {
     display: none;
 }
 
