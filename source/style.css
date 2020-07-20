@@ -182,18 +182,7 @@ col.radio-col {
     background: #63727a; /*Color of the inner circle*/
 }
 
-/* Checkmark of SELECTED CHECKMARK */
-[type="checkbox"]:checked + label:after {
-    color: #047cc2;
-    font-size: calc(var(--check-size)); /*Size of the checkmark*/
-    font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;
-    font-weight: bold;
-    left: -18px; /*Offset so it can be centered in the outer circle*/
-    top: -24px; /*Offset so it can be centered in the outer circle*/
-    width: 37px;
-    height: 37px;
-}
-
+/* General position and size of checkmark */
 [type="checkbox"]:checked + label svg.checkmark {
     position: absolute;
     display: block;
@@ -203,14 +192,17 @@ col.radio-col {
     left: -17px;
 }
 
+/* Selected checkmark */
 [type="checkbox"]:checked:not(:disabled) + label svg.checkmark {
     fill: #047cc2;
 }
 
+/* Selected and disabled checkmark */
 [type="checkbox"]:checked:disabled + label svg.checkmark {
     fill: #63727a;
 }
 
+/* Not selected checkmark */
 [type="checkbox"]:not(:checked) + label svg.checkmark {
     display: none;
 }
