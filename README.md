@@ -18,6 +18,10 @@ To learn all about how to use this field plug-in, check out the [wiki](https://g
 
 For just timing a single *select_one* or *select_multiple* field on a screen, see our [timed-choice](https://github.com/surveycto/timed-choice) field plug-in.
 
+![Beta](extras/readme-images/beta-release-download.jpg)
+
+*This plug-in is currently under beta. If you you find a problem with the field plug-in, please email max@surveycto.com.*
+
 [![Download now](extras/readme-images/download-button.png)](https://github.com/surveycto/timed-field-list/raw/master/timed-field-list.fieldplugin.zip)
 
 ## Default SurveyCTO feature support
