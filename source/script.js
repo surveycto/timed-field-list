@@ -274,17 +274,17 @@ var numButtons = allButtons.length
 if (prevMetaData != null) { // If there is already a set answer when the field first appears, then this statement is true
   var allAnswered = (metaDataArray.indexOf(missed) === -1) // Whether or not there were any "missed" values. If none are found, then all rows have been answered. Using "metaDataArray", since that stores an array of previous row answers
 
-  if ((allAnswered && (!timedField || endEarly || (leftoverTime === 0))) || ((leftoverTime === 0) && !allRequired)) { // Whether the field is complete, and the respondent can move to the next page.
-    setAnswer(completeValue)
+  if ((allAnswered && (!timedField || endEarly || (leftoverTime === 0))) || (timedField && (leftoverTime === 0) && !allRequired)) {
     complete = true
-    if (timedField) {
+    setAnswer(completeValue)
+    if (!timedField || (leftoverTime === 0)) {
       blockInput()
       if (autoAdvance) {
         goToNextField()
       }
-    }
-  }
-}
+    } // End blocking and advancing if applicable
+  } // End field has been given an answer
+} // End metadata existed
 
 // Changes checkboxes to radio buttons if select_one
 if (fieldType === 'select_one') { // Changes input type
