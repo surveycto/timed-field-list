@@ -41,6 +41,7 @@ var autoAdvance = getPluginParameter('advance')
 var block = getPluginParameter('block')
 var dispTimer = getPluginParameter('disp')
 var endEarly = getPluginParameter('endearly')
+var immediate = getPluginParameter('immediate')
 var missed = getPluginParameter('pass')
 var nochange = getPluginParameter('nochange')
 var numberRows = getPluginParameter('numberrows')
@@ -103,6 +104,12 @@ if (!timedField || (dispTimer === 0)) { // If the form designer specifically sta
   timerContainer.parentElement.removeChild(timerContainer)
 } else {
   dispTimer = true
+}
+
+if (immediate === 1) {
+  immediate = true
+} else {
+  immediate = false
 }
 
 // Parameter: nochange
@@ -395,7 +402,7 @@ function gatherAnswer () {
         goToNextField()
       }
     } // End allRequired and timeZero
-  } // End setting answer IF
+  } // End setting answer IFs
 } // End gatherAnswer
 
 // Save the user's response (update the current answer)
@@ -432,6 +439,10 @@ function timer () {
 
   if (dispTimer) {
     timerDisp.innerHTML = String(Math.ceil(timeLeft / round))
+  }
+
+  if (immediate) {
+    setAnswer(completeValue)
   }
 }
 
