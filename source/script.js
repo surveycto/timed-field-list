@@ -471,7 +471,7 @@ function adjustWindow () {
   var windowHeight // Height of the working area. In web forms, it's the height of the window, otherwise, it's the height of the device.
 
   if (platform === 'web') {
-    usedHeight = 325 // This is an estimation for web collect
+    usedHeight = 355 // This is an estimation for web collect
     windowHeight = parent.outerHeight // Height of the document of the web page.
   } else {
     usedHeight = 200 // This is an estimation for mobile devices
