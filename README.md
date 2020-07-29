@@ -32,7 +32,7 @@ Unlike other fields, the choices selected are not stored in the field value, but
 
 ## How to use
 
-## Getting started
+### Getting started
 
 **To use this field plug-in as-is**, just download the [timed-field-list.fieldplugin.zip](https://github.com/surveycto/timed-field-list/raw/master/timed-field-list.fieldplugin.zip) file from this repo, and attach it to your form.
 
