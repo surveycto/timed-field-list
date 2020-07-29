@@ -38,10 +38,10 @@ Unlike other fields, the choices selected are not stored in the field value, but
 
 **To use with the sample form:**
 
-1. Download the [sample form](https://github.com/surveycto/timed-field-list/raw/master/extras/sample-form/Timed%20field%20list.xlsx) from this repo and upload it to your SurveyCTO server.
+1. Download the [sample form](https://github.com/surveycto/timed-field-list/raw/master/extras/sample-form/Timed%20field%20list.xlsx) from this repo.
 1. Download the [timed-field-list.fieldplugin.zip](https://github.com/surveycto/timed-field-list/raw/master/timed-field-list.fieldplugin.zip) file from this repo.
 1. Also download the [button-to-advance.fieldplugin.zip](https://github.com/surveycto/button-to-advance/raw/master/button-to-advance.fieldplugin.zip) field plug-in file ([readme](https://github.com/surveycto/button-to-advance/blob/master/README.md)).
-1. Attache the two field plug-ins to the sample form.
+1. Upload the sample form to your server with the two field plug-ins attached.
 1. Adjust the parameters as you see fit.
 
 To learn more about using the sample form, check out the [wiki](https://github.com/surveycto/timed-field-list/wiki/Timed-field-list-wiki), section *1.1 Main sample form*.
