@@ -24,7 +24,33 @@ For just timing a single *select_one* or *select_multiple* field on a screen, se
 
 [![Download now](extras/readme-images/download-button.png)](https://github.com/surveycto/timed-field-list/raw/master/timed-field-list.fieldplugin.zip)
 
-## Default SurveyCTO feature support
+### Data format
+
+This field plug-ins support the *select_one* and *select_multiple* field types. Just like with normal fields, the field type will determine what kind of buttons are shown: radio buttons or checkboxes.
+
+Unlike other fields, the choices selected are not stored in the field value, but in the field plug-in metadata. To retrieve that metadata, use the [plug-in-metadata() function](https://docs.surveycto.com/02-designing-forms/01-core-concepts/09.expressions.html#plug-in-metadata). Sections of data are stored in a pipe-separated (`|`) list, with the first section storing time data, and each subsequent section storing the choices selected on each row. To learn how to understand that data, check out the [wiki](https://github.com/surveycto/timed-field-list/wiki/Timed-field-list-wiki), section *5. Retrieving the selected choices*.
+
+## How to use
+
+## Getting started
+
+**To use this field plug-in as-is**, just download the [timed-field-list.fieldplugin.zip](https://github.com/surveycto/timed-field-list/raw/master/timed-field-list.fieldplugin.zip) file from this repo, and attach it to your form.
+
+**To use with the sample form:**
+
+1. Download the [sample form](https://github.com/surveycto/timed-field-list/raw/master/extras/sample-form/Timed%20field%20list.xlsx) from this repo and upload it to your SurveyCTO server.
+1. Download the [timed-field-list.fieldplugin.zip](https://github.com/surveycto/timed-field-list/raw/master/timed-field-list.fieldplugin.zip) file from this repo.
+1. Also download the [button-to-advance.fieldplugin.zip](https://github.com/surveycto/button-to-advance/raw/master/button-to-advance.fieldplugin.zip) field plug-in file ([readme](https://github.com/surveycto/button-to-advance/blob/master/README.md)).
+1. Attache the two field plug-ins to the sample form.
+1. Adjust the parameters as you see fit.
+
+To learn more about using the sample form, check out the [wiki](https://github.com/surveycto/timed-field-list/wiki/Timed-field-list-wiki), section *1.1 Main sample form*.
+
+### Parameters
+
+There are lots of optional parameters you can use the customize the field plug-in. For details on all of the parameters and how to use them, see the [wiki](https://github.com/surveycto/timed-field-list/wiki/Timed-field-list-wiki), section *4.1 Required parameter*.
+
+### Default SurveyCTO feature support
 
 | Feature / Property | Support |
 | --- | --- |
@@ -47,19 +73,6 @@ For just timing a single *select_one* or *select_multiple* field on a screen, se
 | `likert` appearance | No |
 | `likert-min` appearance | No  |
 | `likert-mid` appearance | No |
-
-## How to use
-
-**To use this field plug-in as-is**, just download the [timed-field-list.fieldplugin.zip](https://github.com/surveycto/timed-field-list/raw/master/timed-field-list.fieldplugin.zip) file from this repo, and attach it to your form.
-
-**To use with the sample form:**
-
-1. Download the [sample form](extras/sample-form) from this repo and upload it to your SurveyCTO server.
-1. Download the [timed-field-list.fieldplugin.zip](https://github.com/surveycto/timed-field-list/raw/master/timed-field-list.fieldplugin.zip) file from this repo, and attach it to the sample form on your SurveyCTO server.
-1. Adjust the parameters as you see fit.
-
-## Parameters
-See the [wiki]() for details about all of the parameters and how to use them.
 
 ## More resources
 
