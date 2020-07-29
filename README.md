@@ -22,8 +22,6 @@ For just timing a single *select_one* or *select_multiple* field on a screen, se
 
 *This plug-in is currently under beta. If you you find a problem with the field plug-in, please email max@surveycto.com.*
 
-[![Download now](extras/readme-images/download-button.png)](https://github.com/surveycto/timed-field-list/raw/master/timed-field-list.fieldplugin.zip)
-
 ### Data format
 
 This field plug-ins support the *select_one* and *select_multiple* field types. Just like with normal fields, the field type will determine what kind of buttons are shown: radio buttons or checkboxes.
