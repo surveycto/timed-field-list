@@ -24,7 +24,7 @@ For just timing a single *select_one* or *select_multiple* field on a screen, se
 
 ### Data format
 
-This field plug-ins support the *select_one* and *select_multiple* field types. Just like with normal fields, the field type will determine what kind of buttons are shown: radio buttons or checkboxes.
+This field plug-in supports the *select_one* and *select_multiple* field types. Just like with normal fields, the field type will determine what kind of buttons are shown: radio buttons or checkboxes.
 
 Unlike other fields, the choices selected are not stored in the field value, but in the field plug-in metadata. To retrieve that metadata, use the [plug-in-metadata() function](https://docs.surveycto.com/02-designing-forms/01-core-concepts/09.expressions.html#plug-in-metadata). Sections of data are stored in a pipe-separated (`|`) list, with the first section storing time data, and each subsequent section storing the choices selected on each row. To learn how to understand that data, check out the [wiki](https://github.com/surveycto/timed-field-list/wiki/Timed-field-list-wiki), section *5. Retrieving the selected choices*.
 
@@ -46,7 +46,7 @@ To learn more about using the sample form, check out the [wiki](https://github.c
 
 ### Parameters
 
-There are lots of optional parameters you can use the customize the field plug-in. For details on all of the parameters and how to use them, see the [wiki](https://github.com/surveycto/timed-field-list/wiki/Timed-field-list-wiki), section *4.1 Required parameter*. However, here is a brief overview of the most common parameters:
+There are lots of optional parameters you can use to customize the field plug-in. For details on all of the parameters and how to use them, see the [wiki](https://github.com/surveycto/timed-field-list/wiki/Timed-field-list-wiki), section *4.1 Required parameter*. However, here is a brief overview of the most common parameters:
 
 |name|Description|Default|
 |---|---|---|
