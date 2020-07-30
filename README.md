@@ -46,7 +46,16 @@ To learn more about using the sample form, check out the [wiki](https://github.c
 
 ### Parameters
 
-There are lots of optional parameters you can use the customize the field plug-in. For details on all of the parameters and how to use them, see the [wiki](https://github.com/surveycto/timed-field-list/wiki/Timed-field-list-wiki), section *4.1 Required parameter*.
+There are lots of optional parameters you can use the customize the field plug-in. For details on all of the parameters and how to use them, see the [wiki](https://github.com/surveycto/timed-field-list/wiki/Timed-field-list-wiki), section *4.1 Required parameter*. However, here is a brief overview of the most common parameters:
+
+|name|Description|Default|
+|---|---|---|
+|`labels`|List of labels for each row of choices. These will go in the left-most column. Each label should be separated by a pipe (`|`).|(none)|
+|`duration`|Starting time on the timer. If this parameter is not defined, the field will not be timed.|(none)|
+|`header`|Header of the column with the row labels, i.e. what will be in the top-left cell of the table of choices.|(none)|
+|`advance`|If this field has a value of `1`, then the field will auto-advance when time runs out|`0`|
+|`block`|By default, when time runs out, fields will be blocked. If this parameter has a value of `0`, then rows will not be blocked after time runs out.|`1`|
+|`nochange`|If this parameter has a value of `1`, then once a choice is selected in a row, then that row will be blocked, and it cannot be changed.|`0`|
 
 ### Default SurveyCTO feature support
 
