@@ -12,7 +12,7 @@
 
 ## Description
 
-Use this field plug-in when you would like to time multiple *select_one* and/or *select_multiple* fields within the same [field list](https://docs.surveycto.com/02-designing-forms/04-sample-forms/05.field-lists.html). This will have a persistent timer at the top, even if the enumerator/respondent scrolls down.
+Use this field plug-in when you would like to time multiple *select_one* and/or *select_multiple* fields within the same [field list](https://docs.surveycto.com/02-designing-forms/04-sample-forms/05.field-lists.html). This will have a persistent timer at the top, even if the enumerator/respondent scrolls down. The timer is optional, so you can also use the field plug-in to create a scrollable field list group.
 
 To learn all about how to use this field plug-in, check out the [wiki](https://github.com/surveycto/timed-field-list/wiki/Timed-field-list-wiki), which goes into full detail on all of the features, parameters, and how to retrieve its data.
 
