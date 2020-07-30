@@ -50,7 +50,7 @@ There are lots of optional parameters you can use the customize the field plug-i
 
 |name|Description|Default|
 |---|---|---|
-|`labels`|List of labels for each row of choices. These will go in the left-most column. Each label should be separated by a pipe (`|`).|(none)|
+|`labels`|List of labels for each row of choices. These will go in the left-most column. Each label should be separated by a pipe (`\|`).|(none)|
 |`duration`|Starting time on the timer. If this parameter is not defined, the field will not be timed.|(none)|
 |`header`|Header of the column with the row labels, i.e. what will be in the top-left cell of the table of choices.|(none)|
 |`advance`|If this field has a value of `1`, then the field will auto-advance when time runs out|`0`|
