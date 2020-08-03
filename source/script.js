@@ -41,6 +41,7 @@ var autoAdvance = getPluginParameter('advance')
 var block = getPluginParameter('block')
 var dispTimer = getPluginParameter('disp')
 var endEarly = getPluginParameter('endearly')
+var immediate = getPluginParameter('immediate')
 var missed = getPluginParameter('pass')
 var nochange = getPluginParameter('nochange')
 var numberRows = getPluginParameter('numberrows')
@@ -103,6 +104,12 @@ if (!timedField || (dispTimer === 0)) { // If the form designer specifically sta
   timerContainer.parentElement.removeChild(timerContainer)
 } else {
   dispTimer = true
+}
+
+if (immediate === 1) {
+  immediate = true
+} else {
+  immediate = false
 }
 
 // Parameter: nochange
@@ -267,17 +274,17 @@ var numButtons = allButtons.length
 if (prevMetaData != null) { // If there is already a set answer when the field first appears, then this statement is true
   var allAnswered = (metaDataArray.indexOf(missed) === -1) // Whether or not there were any "missed" values. If none are found, then all rows have been answered. Using "metaDataArray", since that stores an array of previous row answers
 
-  if ((allAnswered && (!timedField || endEarly || (leftoverTime === 0))) || ((leftoverTime === 0) && !allRequired)) { // Whether the field is complete, and the respondent can move to the next page.
-    setAnswer(completeValue)
+  if ((allAnswered && (!timedField || endEarly || (leftoverTime === 0))) || (timedField && (leftoverTime === 0) && !allRequired)) {
     complete = true
-    if (timedField) {
+    setAnswer(completeValue)
+    if (!timedField || (leftoverTime === 0)) {
       blockInput()
       if (autoAdvance) {
         goToNextField()
       }
-    }
-  }
-}
+    } // End blocking and advancing if applicable
+  } // End field has been given an answer
+} // End metadata existed
 
 // Changes checkboxes to radio buttons if select_one
 if (fieldType === 'select_one') { // Changes input type
@@ -395,7 +402,7 @@ function gatherAnswer () {
         goToNextField()
       }
     } // End allRequired and timeZero
-  } // End setting answer IF
+  } // End setting answer IFs
 } // End gatherAnswer
 
 // Save the user's response (update the current answer)
@@ -433,6 +440,10 @@ function timer () {
   if (dispTimer) {
     timerDisp.innerHTML = String(Math.ceil(timeLeft / round))
   }
+
+  if (immediate) {
+    setAnswer(completeValue)
+  }
 }
 
 function establishTimeLeft () { // This checks if there is leftover time
@@ -460,7 +471,7 @@ function adjustWindow () {
   var windowHeight // Height of the working area. In web forms, it's the height of the window, otherwise, it's the height of the device.
 
   if (platform === 'web') {
-    usedHeight = 325 // This is an estimation for web collect
+    usedHeight = 355 // This is an estimation for web collect
     windowHeight = parent.outerHeight // Height of the document of the web page.
   } else {
     usedHeight = 200 // This is an estimation for mobile devices
