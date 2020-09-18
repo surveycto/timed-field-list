@@ -15,10 +15,6 @@
 
 <div class="hint default-hint-text-size" id="hint" dir="auto">{{{HINT}}}</div>
 
-
-
-
-
 <table id="ft-headers" class="ft-table ft-headers label default-question-text-size">
   <colgroup>
     <col>
@@ -58,18 +54,13 @@
                class="choice-input"
                id="{{CHOICE_INDEX}}"
                {{#CHOICE_SELECTED}}checked="checked" {{/CHOICE_SELECTED}}
-               {{#READONLY}}disabled{{/READONLY}} /><label><svg class="checkmark"><use xlink:href="#checkmark" /></svg></label>
+               {{#READONLY}}disabled{{/READONLY}} /><label><svg class="checkmark" id="checkmark" viewBox="0 0 1024 1024">
+                <g><path class="st0" d="M300.4,795.3L126.3,533.7L93.7,649l155.1,371.6h132C546.9,325.7,930.3,3.4,930.3,3.4
+                  C452.9,279.9,300.4,795.3,300.4,795.3"/></g>
+              </svg></label>
       </td>
       {{/CHOICES}}
     </tr>
   </tbody>
 </table>
 </div>
-
-<!--Checkmark-->
-<svg class="symbol">
-  <symbol id="checkmark" viewBox="0 0 1024 1024" >
-    <g><path class="st0" d="M300.4,795.3L126.3,533.7L93.7,649l155.1,371.6h132C546.9,325.7,930.3,3.4,930.3,3.4
-      C452.9,279.9,300.4,795.3,300.4,795.3"/></g>
-  </symbol>
-</svg>
