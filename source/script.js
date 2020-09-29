@@ -45,6 +45,7 @@ var immediate = getPluginParameter('immediate')
 var missed = getPluginParameter('pass')
 var nochange = getPluginParameter('nochange')
 var numberRows = getPluginParameter('numberrows')
+var numberStart = getPluginParameter('numberstart')
 var allRequired = getPluginParameter('required')
 var unit = getPluginParameter('unit')
 var prevMetaData = getMetaData()
@@ -124,6 +125,11 @@ if (numberRows === 0) {
   numberRows = false
 } else {
   numberRows = true
+}
+
+// Parameter: numberstart
+if ((numberStart == null) || isNaN(numberStart)) {
+  numberStart = 1
 }
 
 // Parameter: pass
@@ -218,7 +224,7 @@ for (var l = 1; l < numLabels; l++) { // Starts at 1, since the first one has al
 var fieldRows = rowBody.querySelectorAll('.list-nolabel')
 for (var l = 0; l < numLabels; l++) { // Populates the table with labels
   var fieldRow = fieldRows[l]
-  fieldRow.querySelector('.fl-label').innerHTML = (numberRows ? String(l + 1) + '. ' : '') + labelArray[l] // Adds the label, and numbers it if applicable
+  fieldRow.querySelector('.fl-label').innerHTML = (numberRows ? String(l + numberStart) + '. ' : '') + labelArray[l] // Adds the label, and numbers it if applicable
 }
 // END CREATING THE ROWS
 
