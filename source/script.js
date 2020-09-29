@@ -222,12 +222,9 @@ for (var l = 1; l < numLabels; l++) { // Starts at 1, since the first one has al
 }
 
 var fieldRows = rowBody.querySelectorAll('.list-nolabel')
-// numberStart
-var numRows = numLabels + numberStart // Number of rows besides the header row
-
-for (var l = numberStart; l <= numRows; l++) { // Populates the table with labels
+for (var l = 0; l < numLabels; l++) { // Populates the table with labels
   var fieldRow = fieldRows[l]
-  fieldRow.querySelector('.fl-label').innerHTML = (numberRows ? String(l) + '. ' : '') + labelArray[l] // Adds the label, and numbers it if applicable
+  fieldRow.querySelector('.fl-label').innerHTML = (numberRows ? String(l + numberStart) + '. ' : '') + labelArray[l] // Adds the label, and numbers it if applicable
 }
 // END CREATING THE ROWS
 
