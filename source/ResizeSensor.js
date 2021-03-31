@@ -287,14 +287,15 @@
     forEachElement(element, function (elem) {
       attachResizeEvent(elem, callback)
     })
+    try {
+      this.detach = function (ev) {
+        ResizeSensor.detach(element, ev)
+      }
 
-    this.detach = function (ev) {
-      ResizeSensor.detach(element, ev)
-    }
-
-    this.reset = function () {
-      element.resizeSensor.resetSensor()
-    }
+      this.reset = function () {
+        element.resizeSensor.resetSensor()
+      }
+    } catch (e) {}
   }
 
   ResizeSensor.reset = function (element) {
