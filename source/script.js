@@ -102,9 +102,9 @@ if ((block === 0) || (!timedField && (block !== 1))) {
 // Parameter: disp
 if (!timedField || (dispTimer === 0)) { // If the form designer specifically states the timer will not be displayed, or if no "duration" was specified (meaning it will not be timed anyway), then the timer will not be shown.
   dispTimer = false
-  timerContainer.parentElement.removeChild(timerContainer)
 } else {
   dispTimer = true
+  timerContainer.style.display = ''
 }
 
 if (immediate === 1) {
