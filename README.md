@@ -11,9 +11,7 @@ To learn all about how to use this field plug-in, check out the [wiki](https://g
 
 For timing a single *select_one* or *select_multiple* field alone on one screen, see the [timed-choice](https://github.com/surveycto/timed-choice) field plug-in.
 
-[![Beta](extras/readme-images/beta-release-download.jpg)](https://github.com/surveycto/timed-field-list/raw/master/timed-field-list.fieldplugin.zip)
-
-*This plug-in is currently under beta. If you you have any feedback, please email support@surveycto.com.*
+[![Download now](extras/readme-images/download-button.png)](https://github.com/surveycto/timed-field-list/raw/master/timed-field-list.fieldplugin.zip)
 
 ### Data format
 
