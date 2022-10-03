@@ -17,7 +17,7 @@ For timing a single *select_one* or *select_multiple* field alone on one screen,
 
 This field plug-in supports the *select_one* and *select_multiple* field types. Just like with normal fields, the field type will determine what kind of buttons are shown: radio buttons or checkboxes.
 
-Unlike other fields, the choices selected are not stored inside the field, but in the field plug-in metadata. To retrieve that metadata, use the [plug-in-metadata() function](https://docs.surveycto.com/02-designing-forms/01-core-concepts/09.expressions.html#plug-in-metadata). Sections of data are stored in a pipe-separated (`|`) list, with the first section storing time data, and each subsequent section storing the choices selected on each question inside the timed field list. To learn how to understand that data, check out the [wiki](https://github.com/surveycto/timed-field-list/wiki#5-retrieving-the-selected-choices), section *5. Retrieving the selected choices*.
+**Important**: Unlike other fields, the **choices selected are NOT stored in the field value**, but in the field plug-in metadata. To retrieve that metadata, use the [plug-in-metadata() function](https://docs.surveycto.com/02-designing-forms/01-core-concepts/09.expressions.html#plug-in-metadata). Sections of data are stored in a pipe-separated (`|`) list, with the first section storing time data, and each subsequent section storing the choices selected on each question inside the timed field list. To learn how to understand that data, check out the [wiki](https://github.com/surveycto/timed-field-list/wiki#5-retrieving-the-selected-choices), section *5. Retrieving the selected choices*.
 
 ## How to use
 
