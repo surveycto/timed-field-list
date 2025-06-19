@@ -302,13 +302,6 @@ if (fieldType === 'select_one') { // Changes input type
 // This is for applying the onchange event listener to each button
 for (var i = 0; i < numButtons; i++) {
   allButtons[i].onchange = function () {
-    // remove 'selected' class from a previously selected option (if any)
-    // var selectedOption = document.querySelector('.choice-container.selected')
-    var selectedOption = this.parentElement.parentElement.querySelector('.selected')
-    if ((selectedOption) && (fieldType === 'select_one')) {
-      selectedOption.classList.remove('selected')
-    }
-    this.parentElement.classList.add('selected') // add 'selected' class to the new selected option
     change.apply(this) // call the change() function and tell it which value was selected
   }
 }
@@ -353,7 +346,6 @@ function clearAnswer () {
   for (var s = 0; s < numSelected; s++) { // Un-check buttons
     var selectedOption = selectedOptions[s]
     selectedOption.checked = false
-    selectedOption.parentElement.classList.remove('selected')
   }
 
   gatherAnswer()
@@ -395,10 +387,6 @@ function gatherAnswer () {
   var allAnswered = (currentAnswerArray.indexOf(missed) === -1) // If there are no "missed" values, then this is true. Checking the array in case a choice value contains the missed value (e.g. a choice value is -999 while the missed value is -99). This works because the missed value will be by itself, with no other choice values in that array part.
   var timeZero = (timeLeft === 0) // Will be false if not a timed field
 
-  if (!timedField) { // If not a timed field, then set the metadata here instead of in the timer
-    setMetaData(currentAnswer) // Drop the first '|' when setting the metadata
-  }
-
   if (allAnswered && (!timedField || endEarly || timeZero)) { // If all rows have been answered, and either they're allowed to leave early or time has reached 0, then they can leave the field.
     setAnswer(completeValue)
 
@@ -412,8 +400,17 @@ function gatherAnswer () {
 } // End gatherAnswer
 
 // Save the user's response (update the current answer)
-function change () { // Currently does nothing but gather the answer, but leaving as it is for now in case something else needs to happen.
+function change () {
   gatherAnswer()
+  
+  // Always update metadata after gathering the answer, regardless of field type
+  if (timedField) {
+    // For timed fields, include timing information (timer will also update this, but this ensures immediate updates)
+    setMetaData(String(timeLeft) + ' ' + String(Date.now()) + '|' + currentAnswer)
+  } else {
+    // For non-timed fields, just save the current answer
+    setMetaData(currentAnswer)
+  }
 }
 
 // If the field label or hint contain any HTML that isn't in the form definition, then the < and > characters will have been replaced by their HTML character entities, and the HTML won't render. We need to turn those HTML entities back to actual < and > characters so that the HTML renders properly. This will allow you to render HTML from field references in your field label or hint.
@@ -494,14 +491,33 @@ function adjustWindow () {
   headerTable.style.width = String(rowTableWidth) + 'px'
 }
 
-function adjustHeaderFont () { // If the words in the headers are too long, this shrinks them so they fit better.
+function adjustHeaderFont () { // Maintains consistent font size across all headers
   var allHeaders = document.querySelectorAll('.header')
-  for (var h = 0; h < numChoices - 1; h++) {
+  var minFontSize = 1 // Start at the default size
+  
+  // First pass: find the minimum font size needed for all headers
+  for (var h = 0; h < allHeaders.length; h++) {
     var headerCell = allHeaders[h]
-    var fontSize = 1 // Start at the default, then get smaller as needed
-    while ((headerCell.scrollWidth > headerCell.clientWidth) && (fontSize > 0.1)) {
+    var fontSize = 1
+    
+    // Reset font size to test properly
+    headerCell.style.fontSize = String(fontSize) + 'em'
+    
+    // Find the minimum font size for this specific header
+    // Check both horizontal and vertical overflow (for wrapped text)
+    while (((headerCell.scrollWidth > headerCell.clientWidth) || (headerCell.scrollHeight > headerCell.clientHeight)) && (fontSize > 0.1)) {
       fontSize -= 0.1
       headerCell.style.fontSize = String(fontSize) + 'em'
     }
+    
+    // Keep track of the smallest font size needed
+    if (fontSize < minFontSize) {
+      minFontSize = fontSize
+    }
+  }
+  
+  // Second pass: apply the minimum font size to all headers
+  for (var h = 0; h < allHeaders.length; h++) {
+    allHeaders[h].style.fontSize = String(minFontSize) + 'em'
   }
 }
