@@ -1,3 +1,4 @@
+
 /*
     ------------------------
     Labels and hints
@@ -5,11 +6,8 @@
 */
 
 .label {
-    /* Enhanced typography and spacing */
+    /* add style rules here to change how the label appears */
     margin: .75rem 0;
-    font-weight: 600;
-    line-height: 1.4;
-    color: #2c3e50;
 }
 
 .timer{
@@ -27,6 +25,10 @@
     transition: all 0.3s ease;
 }
 
+.timer td{
+    vertical-align: middle;
+}
+
 /* Subtle animation for timer warnings */
 .timer.warning {
     animation: pulse 2s infinite;
@@ -37,17 +39,10 @@
     50% { transform: scale(1.02); }
 }
 
-.timer td{
-    vertical-align: middle;
-}
-
 .hint {
     margin: .5rem 0;
     color: rgba(0,0,0,.65);
     font-style: italic;
-    /* Enhanced typography */
-    font-size: 0.9em;
-    line-height: 1.5;
 }
 
 /* TABLE FORMATTING */
@@ -57,8 +52,6 @@
     height: 400px;
     margin-top: 0;
     overflow-y:scroll;
-    /* Professional improvement: subtle border radius */
-    border-radius: 6px;
 }
 
 col.radio-col {
@@ -78,7 +71,6 @@ col.radio-col {
     display: table;
     table-layout:fixed;
     width: 100%;
-    /* Professional improvement: subtle shadow */
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
@@ -91,13 +83,10 @@ col.radio-col {
 }
 
 .ft-table td {
-    /* Enhanced padding and typography */
-    padding: 14px 8px;
-    font-size: 0.95em;
+    padding: 11px 4px;
     transition: background-color 0.2s ease;
 }
 
-/* Professional improvement: alternating row colors */
 .ft-rows tbody tr {
     transition: all 0.2s ease;
 }
@@ -110,24 +99,16 @@ col.radio-col {
     background-color: #ffffff;
 }
 
-/* Professional improvement: hover highlights */
 .ft-rows tbody tr:hover {
     background-color: #e3f2fd;
 }
 
-/* Better Visual Feedback for Selections: Highlight selected rows */
 .ft-rows tbody tr:has(input:checked) {
     background-color: #e8f4fd;
     border-left: 3px solid #007bff;
 }
 
-/* Selected button styling */
-input:checked + label {
-    font-weight: 600;
-    color: #007bff;
-}
-
-/* Professional improvement: disabled row styling */
+/* Disabled row styling */
 .ft-rows tbody tr:has(input:disabled) {
     background-color: #f5f5f5;
     opacity: 0.7;
@@ -135,22 +116,6 @@ input:checked + label {
 
 .ft-rows tbody tr:has(input:disabled):hover {
     background-color: #f5f5f5;
-}
-
-/* Subtle Progress/Status Indicators: Visual completion indicator */
-.ft-rows tbody tr.completed {
-    position: relative;
-}
-
-.ft-rows tbody tr.completed::after {
-    content: "✓";
-    position: absolute;
-    right: 8px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #28a745;
-    font-weight: bold;
-    font-size: 14px;
 }
 
 .list-nolabel, .fl-label {
@@ -163,6 +128,11 @@ input:checked + label {
     width: 60px;
 }
 
+input:checked + label {
+    font-weight: 600;
+    color: #007bff;
+}
+
 /* END TABLE FORMATTING */
 
 /* Basic button styling to maintain alignment */
@@ -173,14 +143,14 @@ input:checked + label {
 .fl-radio label {
     cursor: pointer;
     display: inline-block;
-    /* Professional improvement: smooth transitions */
     transition: all 0.2s ease;
 }
 
-/* Professional improvement: enhanced hover effect for labels */
+/* Hover effect for labels */
 .fl-radio label:hover {
     transform: translateY(-1px);
 }
+
 
 /* Disabled button styling */
 .fl-radio input:disabled + label {
@@ -197,11 +167,24 @@ input:checked + label {
     display: none;
 }
 
-/* Responsive Improvements */
-@media (max-width: 768px) {
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+@media (max-width: 600px) {
     .ft-table td {
         padding: 10px 4px;
         font-size: 0.9em;
+    }
+    
+    /* Row labels specific sizing */
+    .ft-table td.fl-label {
+        font-size: 0.85em;
+        line-height: 1.2;
     }
     
     .timer {
@@ -217,14 +200,32 @@ input:checked + label {
     .header, .fl-radio {
         max-width: 50px;
         width: 50px;
+        font-size: 0.8em; /* Also resize header text */
     }
 }
 
-/* REDUCED MOTION SUPPORT */
-@media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
+/* Additional breakpoint for very small screens */
+@media (max-width: 480px) {
+    .ft-table td.fl-label {
+        font-size: 0.75em;
+        line-height: 1.1;
+    }
+    
+    .header, .fl-radio {
+        font-size: 0.7em;
+    }
+    
+    .ft-table td {
+        padding: 8px 2px;
+        font-size: 0.8em;
+    }
+    
+    col.radio-col {
+        width: 40px;
+    }
+    
+    .header, .fl-radio {
+        max-width: 40px;
+        width: 40px;
     }
 }
