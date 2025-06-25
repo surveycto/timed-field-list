@@ -49,9 +49,10 @@
 
 .scrolling {
     display: block;
-    height: 400px;
     margin-top: 0;
-    overflow-y:scroll;
+    overflow-y: auto; /* Only show scrollbar when needed */
+    max-height: 70vh; /* Use viewport height instead of fixed pixels */
+    min-height: 100px; /* Prevent container from being too small */
 }
 
 col.radio-col {
@@ -72,6 +73,7 @@ col.radio-col {
     table-layout:fixed;
     width: 100%;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    min-height: min-content;
 }
 
 .ft-table thead {
@@ -200,24 +202,20 @@ input:checked + label {
     .header, .fl-radio {
         max-width: 50px;
         width: 50px;
-        font-size: 0.8em; /* Also resize header text */
+        font-size: 0.8em; /* Consolidated - removed duplicate */
     }
 }
 
 /* Additional breakpoint for very small screens */
 @media (max-width: 480px) {
-    .ft-table td.fl-label {
-        font-size: 0.75em;
-        line-height: 1.1;
-    }
-    
-    .header, .fl-radio {
-        font-size: 0.7em;
-    }
-    
     .ft-table td {
         padding: 8px 2px;
         font-size: 0.8em;
+    }
+    
+    .ft-table td.fl-label {
+        font-size: 0.75em;
+        line-height: 1.1;
     }
     
     col.radio-col {
@@ -227,5 +225,6 @@ input:checked + label {
     .header, .fl-radio {
         max-width: 40px;
         width: 40px;
+        font-size: 0.7em;
     }
 }
