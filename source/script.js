@@ -24,6 +24,17 @@ var rowBody = rowTable.querySelector('tbody')
 var fieldHContainer = document.querySelector('#field-header') // Top-left most cell
 var fieldRowHtml = rowTable.querySelector('.list-nolabel').outerHTML // The HTML for each non-header row
 
+// Determine current language (default to 'en')
+const lang = fieldProperties.LANGUAGE || 'en'
+
+function getLocalizedParam(key) {
+  const localized = getPluginParameter(`${key}:${lang}`)
+  if (localized !== null && localized !== undefined) {
+    return localized
+  }
+  return getPluginParameter(key)
+}
+
 // Start timer fields
 var timerContainer = document.querySelector('#timer-container')
 var timerDisp = timerContainer.querySelector('#timerdisp')
@@ -31,10 +42,10 @@ var unitDisp = timerContainer.querySelector('#unitdisp')
 
 // PARAMETERS
 
-var allLabels = getPluginParameter('labels')
+var allLabels = getLocalizedParam('labels')
 
 var timeStart = getPluginParameter('duration')
-var headerText = getPluginParameter('header')
+var headerText = getLocalizedParam('header')
 
 var frameAdjust = getPluginParameter('adjust')
 var autoAdvance = getPluginParameter('advance')
@@ -224,7 +235,7 @@ for (var l = 1; l < numLabels; l++) { // Starts at 1, since the first one has al
 var fieldRows = rowBody.querySelectorAll('.list-nolabel')
 for (var l = 0; l < numLabels; l++) { // Populates the table with labels
   var fieldRow = fieldRows[l]
-  fieldRow.querySelector('.fl-label').innerHTML = (numberRows ? String(l + numberStart) + '. ' : '') + labelArray[l] // Adds the label, and numbers it if applicable
+  fieldRow.querySelector('.fl-label').innerHTML = (numberRows ? String(l + numberStart) + '. ' : '') + unEntity(labelArray[l]) // Adds the label, and numbers it if applicable
 }
 // END CREATING THE ROWS
 
